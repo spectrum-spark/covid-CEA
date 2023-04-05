@@ -68,23 +68,11 @@ cetHigherB <- annotate("text", y = 650000, x = 375, size=3, label = "CET: 1,600"
 # cetHigherC <- annotate("text", y = 650000, x = 375, size=3, label = "CET: 1,000",  family = "univers")
 
 
-
-## Style guide for points on scatter plots
-# use filled shapes for immune escape at 1.5y and plus/open for 2.5y
-# use plus/open shapes for "low TP" and filled shape for "high TP" scenarios
-# filled shapes: circle, square, triangle, diamond
-# their plus counterparts: circle plus, square plus, triangle square, diamond plus
-# their open counterparts: circle open, square open, triangle open, diamond open
-# other shapes: asterisk, cross, plus
-
-
 # Scenario 7: Group A, 80% coverage, immune escape at 1.5 years, low TP, all scenarios 
 df_Base <- covidData_Base %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="low TP"&
                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
 df_PSA  <- covidData_PSA  %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="low TP"&
                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
-
-
 
 ggtitle <- "Older population, 80% coverage, low TP, immune escape 1.5 yr, boosting starts 2.0 yr"
 
@@ -97,32 +85,3 @@ ggplot() +
   geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
 
 ggsave(height=6, width=8, dpi=600, file="plots/PSA_07.pdf")
-
-
-
-
-
-
-
-
-
-# ggtitle <- "Scenario: older population, 80% coverage, low TP, immune escape 1.5 yr, boosting starts 2.0 yr"
-# 
-# ggplot() +
-#   geom_point(data=df_PSA, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart), size=2.5, fill="white") + 
-#   geom_point(data=df_Base, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart), size=2.5, fill="red") + 
-#   labs(shape = "", color = "") +
-#   scale_shape_manual(values=c("circle filled", "square filled", "triangle filled", "diamond filled", "asterisk")) +
-#   scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
-#   xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
-#   geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
-# 
-# ggsave(height=6, width=8, dpi=600, file="plots/PSA_07.pdf")
-
-
-
-
-
-
-
-
