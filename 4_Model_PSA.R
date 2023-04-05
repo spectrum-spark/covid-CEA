@@ -1,7 +1,5 @@
 source("1_Model_Base.R")
 
-twoZ <- 2 * qnorm(p=.025, lower.tail=FALSE)
-
 betaParam <- function(mean, se) {
   alpha <- ((1 - mean) / se ^ 2 - 1 / mean) * mean ^ 2
   beta  <- alpha * (1 / mean - 1)
