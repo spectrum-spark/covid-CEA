@@ -125,7 +125,3 @@ ggplot(df, aes(x=parameter,y=value, fill=type, colour=type)) +
 ggsave(height=6, width=9, dpi=600, file="plots/tornado_10.pdf")
 ggsave(height=6, width=9, dpi=600, file="plots/tornado_10.svg")
 
-
-
-
-
