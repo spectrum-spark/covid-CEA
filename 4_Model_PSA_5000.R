@@ -95,7 +95,7 @@ covidData  <- covidData  %>%
 ### Calculate Costs and DALYs ########################################################################################
 
 covidData_PSA <- data.frame()
-runs <- 20
+runs <- 10
 
 obs <- n_distinct(covidData$iteration)
 
@@ -262,7 +262,21 @@ for (i in 1:runs){
 }
 
 
-# number of replications
+
+icostPSA <- mean(covidData_PSA$iCost)
+idalyPSA <- mean(covidData_PSA$iDaly)
+icerPSA <- icostPSA / idalyPSA
+
+print(c("iCost", round(icostPSA,0)))
+print(c("iDaly", round(idalyPSA,0)))
+print(c("icer", round(icerPSA,0)))
+
+
+plot(covidData_PSA$iDaly, covidData_PSA$iCost)
+
+
+
+# Cost-effectiveness acceptability curve
 wtpLevels    <- 1001                                        
 ceacCols     <- c("wtpLevels", "Boost", "noBoost")
 ceacData     <- matrix(NA, nrow = wtpLevels, ncol = length(ceacCols)) 
@@ -281,7 +295,7 @@ for (i in 1:length(ceacData[,1])){
 ceacData <- as.data.frame(ceacData)
 
 ggplot(ceacData) +
-  geom_line(aes(wtpLevels, Boost),   size=0.5, color ="deepskyblue4", linetype = "solid") +
+  geom_line(aes(wtpLevels, Boost),   linewidth=0.5, color ="deepskyblue4", linetype = "solid") +
   xlab("Cost-effectiveness threshold") + ylab("Probability cost-effective") +
   scale_y_continuous(breaks = seq(0, 1,    0.25), limits = c(0, 1)) +
   scale_x_continuous(breaks = seq(0, 25000, 5000),   limits = c(0, 25000)) +
@@ -293,23 +307,9 @@ ggplot(ceacData) +
         panel.grid.major  = element_line(size = 0.25, colour = "gray99")) +
   theme_bw()
   #panel_border(color = "black", size = 0.25, linetype = 1) +
-ggsave(height=4.6, width=6.0, dpi=600, file="ceac.svg")
-ggsave(height=4.6, width=6.0, dpi=600, file="ceac.pdf")
+#ggsave(height=4.6, width=6.0, dpi=600, file="plots/ceacSample.svg")
+#ggsave(height=4.6, width=6.0, dpi=600, file="plots/ceacSample.pdf")
 
-
-
-
-
-icostPSA <- mean(covidData_PSA$iCost)
-idalyPSA <- mean(covidData_PSA$iDaly)
-icerPSA <- icostPSA / idalyPSA
-
-print(c("iCost", round(icostPSA,0)))
-print(c("iDaly", round(idalyPSA,0)))
-print(c("icer", round(icerPSA,0)))
-
-
-plot(covidData_PSA$iDaly, covidData_PSA$iCost)
 
 
 
