@@ -95,12 +95,7 @@ covidData  <- covidData  %>%
 ### Calculate Costs and DALYs ########################################################################################
 
 covidData_PSA <- data.frame()
-runs <- 1
 
-obs <- n_distinct(covidData$iteration)
-
-for (i in 1:runs){
-  
   # Number of vaccine doses
   nVaxDoses    <- covidData$nVaxDoses
   
@@ -127,72 +122,7 @@ for (i in 1:runs){
   nOccupyWard <- covidData$ward_occupancy_all_ages
   nOccupyICU  <- covidData$ICU_occupancy_all_ages
   nDeaths     <- covidData$deaths_all_ages
-  
-  # Random draws from specified probability distribution
-  # Beta
-  param           <- betaParam(mean = dModerate["mean"], se = (dModerate["high"]-dModerate["low"])/(2*1.96))
-  dModerate.psa   <- rbeta(obs, param$alpha, param$beta)
-  
-  param           <- betaParam(mean = dSevere["mean"], se = (dSevere["high"]-dSevere["low"])/(2*1.96))
-  dSevere.psa    <- rbeta(obs, param$alpha, param$beta)
-  
-  param           <- betaParam(mean = dCritical["mean"], se = (dCritical["high"]-dCritical["low"])/(2*1.96))
-  dCritical.psa   <- rbeta(obs, param$alpha, param$beta)
-  
-  param           <- betaParam(mean = dPostacute["mean"], se = (dPostacute["high"]-dPostacute["low"])/(2*1.96))
-  dPostacute.psa  <- rbeta(obs, param$alpha, param$beta)
-  
-  # Gamma
-  param           <- gammaParam(mean = cHomeGroupA["mean"], se = (cHomeGroupA["high"]-cHomeGroupA["low"])/(2*1.96))
-  cHomeGroupA.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cHomeGroupB["mean"], se = (cHomeGroupB["high"]-cHomeGroupB["low"])/(2*1.96))
-  cHomeGroupB.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cHomeGroupC["mean"], se = (cHomeGroupC["high"]-cHomeGroupC["low"])/(2*1.96))
-  cHomeGroupC.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cWardGroupA["mean"], se = (cWardGroupA["high"]-cWardGroupA["low"])/(2*1.96))
-  cWardGroupA.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cWardGroupB["mean"], se = (cWardGroupB["high"]-cWardGroupB["low"])/(2*1.96))
-  cWardGroupB.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cWardGroupC["mean"], se = (cWardGroupC["high"]-cWardGroupC["low"])/(2*1.96))
-  cWardGroupC.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cICUGroupA["mean"], se = (cICUGroupA["high"]-cICUGroupA["low"])/(2*1.96))
-  cICUGroupA.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cICUGroupB["mean"], se = (cICUGroupB["high"]-cICUGroupB["low"])/(2*1.96))
-  cICUGroupB.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cICUGroupC["mean"], se = (cICUGroupC["high"]-cICUGroupC["low"])/(2*1.96))
-  cICUGroupC.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cDeliveryA["mean"], se = (cDeliveryA["high"]-cDeliveryA["low"])/(2*1.96))
-  cDeliveryA.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cDeliveryB["mean"], se = (cDeliveryB["high"]-cDeliveryB["low"])/(2*1.96))
-  cDeliveryB.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cDeliveryC["mean"], se = (cDeliveryC["high"]-cDeliveryC["low"])/(2*1.96))
-  cDeliveryC.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cVaxGroupA["mean"], se = (cVaxGroupA["high"]-cVaxGroupA["low"])/(2*1.96))
-  cVaxGroupA.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cVaxGroupB["mean"], se = (cVaxGroupB["high"]-cVaxGroupB["low"])/(2*1.96))
-  cVaxGroupB.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  param           <- gammaParam(mean = cVaxGroupC["mean"], se = (cVaxGroupC["high"]-cVaxGroupC["low"])/(2*1.96))
-  cVaxGroupC.psa <- rgamma(obs, shape=param$shape, scale=param$scale)
-  
-  # Uniform
-  nModerate.psa  <- runif(obs, min = nModerate["low"],  max = nModerate["high"])
-  nSevere.psa    <- runif(obs, min = nSevere["low"],    max = nSevere["high"])
-  nCritical.psa  <- runif(obs, min = nCritical["low"],  max = nCritical["high"])
-  nPostacute.psa <- runif(obs, min = nPostacute["low"], max = nPostacute["high"])
+
   
   # Calculate Discounted YLLs by age groups and the total YLLs
   yll0.9   <- ifelse(popType=="Older", covidData$deaths0.9   * (1-exp(-dRate * lifeExpU[1]))/dRate, covidData$deaths0.9   * (1-exp(-dRate * lifeExpM[1]))/dRate)
@@ -208,35 +138,35 @@ for (i in 1:runs){
   
   # Calculate YLDs by COVID categories and total YLDs
   yldAsymptom  <- 0
-  yldHomecare  <- nHomecare  * (dModerate.psa * nModerate.psa)
-  yldAdmitWard <- nAdmitWard * (dModerate.psa * nModerate.psa + dSevere.psa * nSevere.psa + 
-                                  dPostacute.psa * nPostacute.psa)
-  yldAdmitICU  <- nAdmitICU  * (dModerate.psa * nModerate.psa + dSevere.psa * nSevere.psa + 
-                                  dCritical.psa * nCritical.psa + dPostacute.psa * nPostacute.psa)
+  yldHomecare  <- nHomecare  * (dModerate["mean"] * nModerate["mean"])
+  yldAdmitWard <- nAdmitWard * (dModerate["mean"] * nModerate["mean"] + dSevere["mean"] * nSevere["mean"] + 
+                                  dPostacute["mean"] * nPostacute["mean"])
+  yldAdmitICU  <- nAdmitICU  * (dModerate["mean"] * nModerate["mean"] + dSevere["mean"] * nSevere["mean"] + 
+                                  dCritical["mean"] * nCritical["mean"] + dPostacute["mean"] * nPostacute["mean"])
   yld          <- yldAsymptom + yldHomecare + yldAdmitWard + yldAdmitICU 
   
   # Calculate DALYs
   daly  <- yld + yll
   
   # Calculating costs
-  costHome    <- ifelse(group=="A", nHomecare * cHomeGroupA.psa, 
-                        ifelse(group=="B", nHomecare * cHomeGroupB.psa,
-                               ifelse(group=="C", nHomecare * cHomeGroupC.psa,
+  costHome    <- ifelse(group=="A", nHomecare * cHomeGroupA["mean"], 
+                        ifelse(group=="B", nHomecare * cHomeGroupB["mean"],
+                               ifelse(group=="C", nHomecare * cHomeGroupC["mean"],
                                       NA)))
   
-  costWard    <- ifelse(group=="A", nOccupyWard * cWardGroupA.psa,
-                        ifelse(group=="B", nOccupyWard * cWardGroupB.psa,
-                               ifelse(group=="C", nOccupyWard * cWardGroupC.psa,
+  costWard    <- ifelse(group=="A", nOccupyWard * cWardGroupA["mean"],
+                        ifelse(group=="B", nOccupyWard * cWardGroupB["mean"],
+                               ifelse(group=="C", nOccupyWard * cWardGroupC["mean"],
                                       NA)))
   
-  costICU     <- ifelse(group=="A", nOccupyICU * cICUGroupA.psa,
-                        ifelse(group=="B", nOccupyICU * cICUGroupB.psa,
-                               ifelse(group=="C", nOccupyICU * cICUGroupC.psa,
+  costICU     <- ifelse(group=="A", nOccupyICU * cICUGroupA["mean"],
+                        ifelse(group=="B", nOccupyICU * cICUGroupB["mean"],
+                               ifelse(group=="C", nOccupyICU * cICUGroupC["mean"],
                                       NA)))
   
-  costDoses   <-  ifelse(group=="A", nVaxDoses * (cVaxGroupA.psa + cDeliveryA.psa) * (1 + pVaxWaste[1]),
-                         ifelse(group=="B", nVaxDoses * (cVaxGroupB.psa + cDeliveryB.psa) * (1 + pVaxWaste[1]),
-                                ifelse(group=="C", nVaxDoses * (cVaxGroupC.psa + cDeliveryC.psa) * (1 + pVaxWaste[1]),
+  costDoses   <-  ifelse(group=="A", nVaxDoses * (cVaxGroupA["mean"] + cDeliveryA["mean"]) * (1 + pVaxWaste[1]),
+                         ifelse(group=="B", nVaxDoses * (cVaxGroupB["mean"] + cDeliveryB["mean"]) * (1 + pVaxWaste[1]),
+                                ifelse(group=="C", nVaxDoses * (cVaxGroupC["mean"] + cDeliveryC["mean"]) * (1 + pVaxWaste[1]),
                                        NA)))
   
   costDeath   <- nDeaths * cBodyBag[1]
@@ -257,14 +187,10 @@ for (i in 1:runs){
     unite(scenarioVaxCoverage, scenario, vaxCoverage, sep = ", coverage ", remove = FALSE) %>% 
     filter(iDaly!=0)
   
-  covidData_PSA = rbind(covidData_PSA, dfTemp)
-  
-}
 
 
-
-icostPSA <- mean(covidData_PSA$iCost)
-idalyPSA <- mean(covidData_PSA$iDaly)
+icostPSA <- mean(dfTemp$iCost)
+idalyPSA <- mean(dfTemp$iDaly)
 icerPSA <- icostPSA / idalyPSA
 
 print(c("iCost", round(icostPSA,0)))
@@ -275,80 +201,11 @@ print(c("icer", round(icerPSA,0)))
 plot(covidData_PSA$iDaly, covidData_PSA$iCost)
 
 
-ggplot(covidData_PSA) +
+ggplot(dfTemp) +
   geom_point(aes(x=iDaly,       y=iCost),       shape=21, size=2.5, 
              stroke=0.5, fill="#FFFFFFEE", color="deepskyblue4") +
   geom_hline(yintercept=0, linetype="solid", color = "black", size=0.5) +
   geom_vline(xintercept=0, linetype="solid", color = "black", size=0.5) +
   theme_bw()
-
-#+
-  xlab("QALYs gained") + ylab("Incremental costs") +
-  scale_y_continuous(breaks=seq(-100, 400, 100), limits = c(-100, 400)) +
-  scale_x_continuous(breaks=seq(-100, 250, 50),  limits = c(-50,  250)) +
-  theme(axis.title        = element_text(size = 14), 
-        axis.text         = element_text(size = 10,  color = "deepskyblue4"),
-        axis.line         = element_line(size = 0,   color = "white"),
-        axis.ticks        = element_line(size = 0.2, color = "black"),
-        axis.ticks.length = unit(0.2, "cm"),
-        panel.grid.major  = element_line(size = 0.25, colour = "gray97"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Cost-effectiveness acceptability curve
-wtpLevels    <- 1001                                        
-ceacCols     <- c("wtpLevels", "Boost", "noBoost")
-ceacData     <- matrix(NA, nrow = wtpLevels, ncol = length(ceacCols)) 
-colnames(ceacData)     <- ceacCols
-ceacData[,1] <- seq(0, 25000, length.out = 1001)
-
-
-for (i in 1:length(ceacData[,1])){
-  covidData_PSA$nmb     <- ceacData[i,1] * covidData_PSA$iDaly - covidData_PSA$iCost
-  covidData_PSA$Boost   <- ifelse(covidData_PSA$nmb >  0, 1, 0)
-  covidData_PSA$noBoost <- ifelse(covidData_PSA$Boost == 1, 0, 1)
-  ceacData[i,2]         <- mean(covidData_PSA$noBoost)
-  ceacData[i,3]         <- mean(covidData_PSA$Boost)
-}
-
-ceacData <- as.data.frame(ceacData)
-
-ggplot(ceacData) +
-  geom_line(aes(wtpLevels, Boost),   linewidth=0.5, color ="deepskyblue4", linetype = "solid") +
-  xlab("Cost-effectiveness threshold") + ylab("Probability cost-effective") +
-  scale_y_continuous(breaks = seq(0, 1,    0.25), limits = c(0, 1)) +
-  scale_x_continuous(breaks = seq(0, 25000, 5000),   limits = c(0, 25000)) +
-  theme(axis.title        = element_text(size = 14), 
-        axis.text         = element_text(size = 10,  color = "deepskyblue4"),
-        axis.line         = element_line(size = 0, color = "black"),
-        axis.ticks        = element_line(size = 0.2, color = "black"),
-        axis.ticks.length = unit(0.2, "cm"),
-        panel.grid.major  = element_line(size = 0.25, colour = "gray99")) +
-  theme_bw()
-  #panel_border(color = "black", size = 0.25, linetype = 1) +
-#ggsave(height=4.6, width=6.0, dpi=600, file="plots/ceacSample.svg")
-#ggsave(height=4.6, width=6.0, dpi=600, file="plots/ceacSample.pdf")
-
-
-
-
-
-
-
-
-
-
-
-
 
 
