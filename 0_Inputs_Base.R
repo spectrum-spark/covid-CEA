@@ -1,4 +1,4 @@
-# Load required packages (install packages if necessary).
+# Load required packages (install packages if necessary)
 library(tidyverse)
 
 rm(list=ls())
