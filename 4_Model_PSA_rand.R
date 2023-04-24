@@ -266,6 +266,55 @@ runs <- 2000
 
 mean(covidData_PSA$icer)
 
+icostPSA <- mean(covidData_PSA$iCost)
+idalyPSA <- mean(covidData_PSA$iDaly)
+icerPSA <- icostPSA / idalyPSA
+
+print(c("iCost", round(icostPSA,0)))
+print(c("iDaly", round(idalyPSA,0)))
+print(c("icer", round(icerPSA,0)))
+
+
+plot(covidData_PSA$iDaly, covidData_PSA$iCost)
+
+
+
+# Cost-effectiveness acceptability curve
+wtpLevels    <- 1001                                        
+ceacCols     <- c("wtpLevels", "Boost", "noBoost")
+ceacData     <- matrix(NA, nrow = wtpLevels, ncol = length(ceacCols)) 
+colnames(ceacData)     <- ceacCols
+ceacData[,1] <- seq(0, 25000, length.out = 1001)
+
+
+for (i in 1:length(ceacData[,1])){
+  covidData_PSA$nmb     <- ceacData[i,1] * covidData_PSA$iDaly - covidData_PSA$iCost
+  covidData_PSA$Boost   <- ifelse(covidData_PSA$nmb >  0, 1, 0)
+  covidData_PSA$noBoost <- ifelse(covidData_PSA$Boost == 1, 0, 1)
+  ceacData[i,2]         <- mean(covidData_PSA$noBoost)
+  ceacData[i,3]         <- mean(covidData_PSA$Boost)
+}
+
+ceacData <- as.data.frame(ceacData)
+
+ggplot(ceacData) +
+  geom_line(aes(wtpLevels, Boost),   linewidth=0.5, color ="deepskyblue4", linetype = "solid") +
+  xlab("Cost-effectiveness threshold") + ylab("Probability cost-effective") +
+  scale_y_continuous(breaks = seq(0, 1,    0.25), limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(0, 25000, 5000),   limits = c(0, 25000)) +
+  theme(axis.title        = element_text(size = 14), 
+        axis.text         = element_text(size = 10,  color = "deepskyblue4"),
+        axis.line         = element_line(size = 0, color = "black"),
+        axis.ticks        = element_line(size = 0.2, color = "black"),
+        axis.ticks.length = unit(0.2, "cm"),
+        panel.grid.major  = element_line(size = 0.25, colour = "gray99")) +
+  theme_bw()
+#panel_border(color = "black", size = 0.25, linetype = 1) +
+#ggsave(height=4.6, width=6.0, dpi=600, file="plots/ceacSample_rand.svg")
+#ggsave(height=4.6, width=6.0, dpi=600, file="plots/ceacSample_rand.pdf")
+
+
+
 #plot(covidData_PSA$iDaly, covidData_PSA$iCost)
 # write_csv(covidData_PSA, "data/covidData_PSA.csv")
 
