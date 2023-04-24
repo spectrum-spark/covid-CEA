@@ -1,3 +1,5 @@
+##Not finalize yet
+
 #method 1:5000
 source("4_Model_PSA_5000.R")
 
@@ -123,7 +125,7 @@ ggplot() +
 ggsave(height=6, width=8, dpi=600, file="plots/PSA_02_04.pdf")
 
 
-# !!!Scenario 7: Group A, 80% coverage, immune escape at 1.5 years, low TP, all scenarios
+# !!!Scenario 7: Group A, 80% coverage, immune escape at 1.5 years, low TP, all scenarios (plot makes no sense)
 df_Base <- covidData_Base %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="low TP"&
                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
 df_PSA  <- covidData_PSA %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="low TP"&
