@@ -1,4 +1,6 @@
 ##Not finalize yet
+#need update CEA (Group B&C) line annotate text
+#need double check scenario 7 filter data
 
 #method 1:5000
 source("4_Model_PSA_5000.R")
