@@ -254,7 +254,7 @@ runs <- 2000
     
     dfTemp <- dfTemp %>% 
       group_by(group, vaxCoverage, tpLevel, immuneEscape, ageScenario) %>% 
-      mutate(daly0 = daly[1], cost0 = cost[1], iDaly = daly0 - daly, iCost = cost - cost0, icer = iCost/iDaly) %>% 
+      mutate(daly0 = daly[1], cost0 = cost[1], iDaly = daly0 - daly, iCost = cost - cost0) %>% 
       unite(scenarioBoostStart, scenario, boostStart, sep = " at ", remove = FALSE) %>% 
       unite(scenarioImmuneEscape, scenario, immuneEscape, sep = ", immune escape ", remove = FALSE) %>% 
       unite(scenarioVaxCoverage, scenario, vaxCoverage, sep = ", coverage ", remove = FALSE) %>% 
