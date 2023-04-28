@@ -189,6 +189,24 @@ ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioImmuneEscape, color=scenarioImmun
 
 ggsave(height=6, width=8, dpi=600, file="plots/figure_29.pdf")
 
+ # Scenario: Group B, 80% coverage, immune escape at 2 years, high TP, all scenarios (fig 33)
+ df <- covidData_Base %>% 
+   filter(
+     group == "B" &
+       (immuneEscape == "1.50 yr" | immuneEscape == "2.50 yr") &
+       tpLevel == "high TP" &
+       boostStart == "2.00 yr")
+ 
+ ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, boosting starts 2.0 yr"
+ 
+ ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioImmuneEscape, color=scenarioImmuneEscape)) +
+   geom_point(size=2.5) + labs(shape = "", color = "") +
+   scale_shape_manual(values=c("circle", "circle open", "square", "square open","triangle", "triangle open")) +
+   scale_color_manual(values=c("purple2", "purple2", "darkcyan","darkcyan",  "red3", "red3")) +
+   xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
+ 
+ ggsave(height=6, width=8, dpi=600, file="plots/figure_33.pdf")
 
 # Scenario 9: Group B, 80% coverage, immune escape at 1.5 years, high TP, all scenarios (fig 37)
 df <- covidData_Base %>% filter(popType=="Younger" & immuneEscape=="1.50 yr" & tpLevel=="high TP" & 
