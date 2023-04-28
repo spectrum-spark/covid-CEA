@@ -247,12 +247,13 @@ df <- df %>%
  
  ggsave(height=6, width=8, dpi=600, file="plots/figure_42.pdf")
  
- # # Scenario: Group B, 50% coverage, immune escape at 2.5 years, high risk, high TP (fig 41)
- df <- covidData_Base %>% filter(popType=="Older" & 
-                                   (tpLevel=="low TP" | tpLevel=="high TP") &
-                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"| scenario=="Random vaccination"| scenario=="Pediatric vaccination"))
- df <- df %>%
-   mutate(popTP = paste0(scenario, sep = "-", tpLevel))
+  # # Scenario: Group B, 50% coverage, immune escape at 2.5 years, high risk, high TP (fig 41)
+df <- covidData_Base %>% filter(popType=="Younger" & 
+                                 (tpLevel=="low TP" | tpLevel=="high TP") &
+                                  (scenario=="High-risk boosting" | scenario=="6-monthly boosting"| scenario=="Random vaccination"| scenario=="Pediatric vaccination") &
+                                   (vaxCoverage=="50.0%"))
+df <- df %>%
+  mutate(popTP = paste0(scenario, sep = "-", tpLevel))
  
  ggtitle <- "Scenario: younger population, 50% initial vaccination coverage \n high and low TP, immune escape 2.0 yr"
  
@@ -261,9 +262,10 @@ df <- df %>%
    scale_shape_manual(values=c("circle", "circle open", "square", "square open","triangle", "triangle open")) +
    scale_color_manual(values=c("purple2", "purple2", "darkcyan","darkcyan",  "red3", "red3")) +
    xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
-   geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
+   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
  
  ggsave(height=6, width=8, dpi=600, file="plots/figure_41.pdf")
+
  
 
 
