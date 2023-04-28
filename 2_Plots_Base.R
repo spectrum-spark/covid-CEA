@@ -24,7 +24,7 @@ ylab <- ylab("Incremental costs ($) per 100,000 pop")
 units <- function(n) {
   labels <- ifelse(n < -1e9, paste0(round(n/1e6), 'M'),  # less than thousands
                    ifelse(n < 1e6, paste0(round(n/1e3), 'k'),  # in thousands
-                          paste0(round(n/1e6), 'M')  # in millions
+                          paste0(round(n/1e6, 1), 'M')  # in millions
                    ))
   return(labels)
 }
@@ -61,9 +61,6 @@ theme  <- theme(axis.title        = element_text(size = 11),
 
 cetLowerA  <- annotate("text", y = 100000, x = 375, size=3, label = "CET = $19,000", family = "univers")
 cetHigherA <- annotate("text", y = 650000, x = 375, size=3, label = "CET = $30,000", family = "univers")
-
-cetLowerA1  <- annotate("text", y = 500000, x = 35, size=3, label = "CET = $19,000", family = "univers")
-cetHigherA1 <- annotate("text", y = 650000, x = 20, size=3, label = "CET = $30,000", family = "univers")
 
 cetLowerB  <- annotate("text", y = 100000, x = 375, size=3, label = "CET = $200",    family = "univers")
 cetHigherB <- annotate("text", y = 650000, x = 375, size=3, label = "CET = $1,600",  family = "univers")
@@ -437,3 +434,95 @@ ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostSt
  ggsave(height=6, width=8, dpi=600, file="plots/scenario_17.pdf")
  
 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ ## ggplot2 theme specifications for all figures below
+ cetLowerA  <- annotate("text", y = 1500000, x = 100, size=3, label = "CET = $19,000", family = "univers")
+ cetHigherA <- annotate("text", y = 1500000, x =  30, size=3, label = "CET = $30,000", family = "univers")
+ 
+ cetLowerB  <- annotate("text", y = 700000, x = 375, size=3, label = "CET = $200",    family = "univers")
+ cetHigherB <- annotate("text", y = 120000, x = 375, size=3, label = "CET = $1,600",  family = "univers")
+ 
+ yscale     <- scale_y_continuous(breaks = seq(-600000, 1500000, 300000), 
+                                  limits = c(-600000, 1500000), 
+                                  labels = units)
+ 
+ 
+ # Figure 19a: Group A, 80% coverage, immune escape at 2 years, high TP, age scenarios
+ df <- covidData_Base %>% 
+   filter(group=="A" & tpLevel=="high TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))
+ df[df == "boosting 5+"]   <- "boosting 05+"
+ ggtitle <- "Scenario: older population, 80% coverage, immune escape / boosting 2 yr, high TP"
+ 
+ figure_19a <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
+   geom_point(size=2.5) + labs(shape = "", color = "") +
+   scale_shape_manual(values=c("circle", "circle plus", "square", "square plus", "triangle", "triangle open", "asterisk")) +
+   scale_color_manual(values=c("purple2","purple2", "darkcyan", "darkcyan", "orange3", "orange3", "red3")) +
+   xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+   geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
+ ggsave(height=6, width=8, dpi=600, file="plots/figure_19a.pdf")
+ 
+ # Figure 19b: Group A, 80% coverage, immune escape at 2 years, low TP, age scenarios 
+ df <- covidData_Base %>% 
+   filter(group=="A" & tpLevel=="low TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))
+ df[df == "boosting 5+"]   <- "boosting 05+"
+ ggtitle <- "Scenario: older population, 80% coverage, immune escape / boosting 2 yr, low TP"
+ 
+ figure_19b <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
+   geom_point(size=2.5) + labs(shape = "", color = "") +
+   scale_shape_manual(values=c("circle", "circle plus", "square", "square plus", "triangle", "triangle open", "asterisk")) +
+   scale_color_manual(values=c("purple2","purple2", "darkcyan", "darkcyan", "orange3", "orange3", "red3")) +
+   xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+   geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
+
+ ggsave(height=6, width=8, dpi=600, file="plots/figure_19b.pdf")
+ 
+ plot_grid(figure_19a, figure_19b, rows = 2)
+ 
+ ggsave(height=10, width=8, dpi=600, file="plots/figure_19.pdf")
+ 
+
+ 
+ 
+ # Figure 22a: Group B, 80% coverage, immune escape at 2 years, high TP, age scenarios
+ df <- covidData_Base %>% 
+   filter(group=="B" & tpLevel=="high TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))
+ df[df == "boosting 5+"]   <- "boosting 05+"
+ ggtitle <- "Scenario: young population, 80% coverage, immune escape / boosting 2 yr, high TP"
+ 
+ figure_22a <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
+   geom_point(size=2.5) + labs(shape = "", color = "") +
+   scale_shape_manual(values=c("circle", "circle plus", "square", "square plus", "triangle", "triangle open", "asterisk")) +
+   scale_color_manual(values=c("purple2","purple2", "darkcyan", "darkcyan", "orange3", "orange3", "red3")) +
+   xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
+ figure_22a
+ ggsave(height=6, width=8, dpi=600, file="plots/figure_22a.pdf")
+ 
+ # Figure 22b: Group B, 80% coverage, immune escape at 2 years, low TP, age scenarios 
+ df <- covidData_Base %>% 
+   filter(group=="B" & tpLevel=="low TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))
+ df[df == "boosting 5+"]   <- "boosting 05+"
+ ggtitle <- "Scenario: young population, 80% coverage, immune escape / boosting 2 yr, low TP"
+ 
+ figure_22b <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
+   geom_point(size=2.5) + labs(shape = "", color = "") +
+   scale_shape_manual(values=c("circle", "circle plus", "square", "square plus", "triangle", "triangle open", "asterisk")) +
+   scale_color_manual(values=c("purple2","purple2", "darkcyan", "darkcyan", "orange3", "orange3", "red3")) +
+   xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
+ figure_22b
+ ggsave(height=6, width=8, dpi=600, file="plots/figure_22b.pdf")
+ 
+ plot_grid(figure_22a, figure_22b, rows = 2)
+ 
+ ggsave(height=10, width=8, dpi=600, file="plots/figure_22.pdf")
+ 
+ 
+ 
