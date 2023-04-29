@@ -135,8 +135,11 @@ ggplot(df, aes(x=parameter,y=value, fill=type, colour=type)) +
             hjust= ifelse(subset(df, type == "High value input", select = value) < baseCase, 1.15, -0.15),
             size = 3, family = "univers") +
   ggtitle("Scenario: older population, 80% initial vaccination coverage, low TP \n immune escape starts 1.5 yr, boosting at 2.0 yr")
-ggsave(height=6, width=9, dpi=600, file="plots/tornado_07.pdf")
-ggsave(height=6, width=9, dpi=600, file="plots/tornado_07.svg")
+
+ggsave(height=6, width=9, dpi=600, file="plots/figure_30.pdf")
+           
+#ggsave(height=6, width=9, dpi=600, file="plots/tornado_07.pdf")
+#ggsave(height=6, width=9, dpi=600, file="plots/tornado_07.svg")
 
 ####################          
 
@@ -227,5 +230,8 @@ ggplot(df, aes(x=parameter,y=value, fill=type, colour=type)) +
             hjust= ifelse(subset(df, type == "High value input", select = value) < baseCase, 1.15, -0.15),
             size = 3, family = "univers") +
   ggtitle("Scenario: younger population, 80% initial vaccination coverage, high TP \n immune escape starts 2.5 yr, boosting at 2.0 yr")
-ggsave(height=6, width=9, dpi=600, file="plots/tornado_10.pdf")
-ggsave(height=6, width=9, dpi=600, file="plots/tornado_10.svg")           
+            
+ggsave(height=6, width=9, dpi=600, file="plots/figure_34.pdf")
+
+#ggsave(height=6, width=9, dpi=600, file="plots/tornado_10.pdf")
+#ggsave(height=6, width=9, dpi=600, file="plots/tornado_10.svg")           
