@@ -62,6 +62,9 @@ theme  <- theme(axis.title        = element_text(size = 11),
 cetLowerA  <- annotate("text", y = 100000, x = 375, size=3, label = "CET = $19,000", family = "univers")
 cetHigherA <- annotate("text", y = 650000, x = 375, size=3, label = "CET = $30,000", family = "univers")
 
+cetLowerA1  <- annotate("text", y = 500000, x = 35, size=3, label = "CET = $19,000", family = "univers")
+cetHigherA1 <- annotate("text", y = 650000, x = 20, size=3, label = "CET = $30,000", family = "univers")
+
 cetLowerB  <- annotate("text", y = 100000, x = 375, size=3, label = "CET = $200",    family = "univers")
 cetHigherB <- annotate("text", y = 650000, x = 375, size=3, label = "CET = $1,600",  family = "univers")
 
@@ -243,7 +246,7 @@ ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostSt
  
  ggsave(height=6, width=8, dpi=600, file="plots/figure_38.pdf")
 
- # Scenario: Group B, 20% coverage, immune escape at 2.5 years, high risk, high TP (fig 42)
+ # Scenario: Group B, 20% coverage, immune escape at 2.5 years, high risk, high TP (fig 44)
 df <- covidData_Base %>% filter(popType=="Younger" & 
                                   (tpLevel=="low TP" | tpLevel=="high TP") &
                                  (scenario=="High-risk boosting" | scenario=="6-monthly boosting"| scenario=="Random vaccination"| scenario=="Pediatric vaccination") &
@@ -260,7 +263,7 @@ df <- df %>%
    xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
    geom_abline(intercept = 0, slope = cetWoodsC,  linewidth = 0.3, linetype="dashed") + cetLowerC + cetHigherC
  
- ggsave(height=6, width=8, dpi=600, file="plots/figure_42.pdf")
+ ggsave(height=6, width=8, dpi=600, file="plots/figure_44.pdf")
  
   # # Scenario: Group B, 50% coverage, immune escape at 2.5 years, high risk, high TP (fig 41)
 df <- covidData_Base %>% filter(popType=="Younger" & 
