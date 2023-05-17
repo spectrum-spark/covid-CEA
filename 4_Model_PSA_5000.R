@@ -100,6 +100,7 @@ runs <- 5
 
 obs <- n_distinct(covidData$iteration)
 
+
 for (i in 1:runs){
   
   # Number of vaccine doses
@@ -262,8 +263,6 @@ for (i in 1:runs){
   
 }
 
-
-
 icostPSA <- mean(covidData_PSA$iCost)
 idalyPSA <- mean(covidData_PSA$iDaly)
 icerPSA <- icostPSA / idalyPSA
@@ -272,9 +271,6 @@ print(c("iCost", round(icostPSA,0)))
 print(c("iDaly", round(idalyPSA,0)))
 print(c("icer", round(icerPSA,0)))
 
-
-
-
 # Cost-effectiveness plane
 ggplot(covidData_PSA) +
   geom_point(aes(x=iDaly,       y=iCost),       shape=21, size=2.5, 
@@ -282,15 +278,15 @@ ggplot(covidData_PSA) +
   geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
   geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
   theme_bw() +
-  xlab("QALYs gained") + ylab("Incremental costs") +
+  xlab("DALYs averted") + ylab("Incremental costs") +
   scale_y_continuous(breaks=seq(-4000000, 4000000, 1000000), limits = c(-4000000, 4000000)) +
   scale_x_continuous(breaks=seq(-600, 600, 200),  limits = c(-600,  600)) +
   theme(axis.title        = element_text(size = 14), 
         axis.text         = element_text(size = 10,  color = "deepskyblue4"),
-        axis.line         = element_line(size = 0,   color = "white"),
-        axis.ticks        = element_line(size = 0.2, color = "black"),
+        axis.line         = element_line(linewidth = 0,   color = "white"),
+        axis.ticks        = element_line(linewidth = 0.2, color = "black"),
         axis.ticks.length = unit(0.2, "cm"),
-        panel.grid.major  = element_line(size = 0.25, colour = "gray97"))
+        panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97"))
 
 
 
@@ -325,7 +321,4 @@ ggplot(ceacData) +
         axis.ticks.length = unit(0.2, "cm"),
         panel.grid.major  = element_line(size = 0.25, colour = "gray99")) +
   theme_bw()
-
-
-
 
