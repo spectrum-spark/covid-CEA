@@ -1,4 +1,4 @@
-#Both epi and econ sensitivity
+# Both epi and econ sensitivity
 
 source("0_Inputs_Base.R")
 
@@ -13,6 +13,7 @@ gammaParam <- function(mean, se) {
   shape <- (mean ^ 2) / (se ^ 2)
   scale <- (se ^ 2) / mean
   params <- list(shape = shape, scale = scale)
+  return(params)
 }
 
 
@@ -95,7 +96,7 @@ covidData  <- covidData  %>%
 ### Calculate Costs and DALYs ########################################################################################
 
 covidData_PSA <- data.frame()
-runs <- 1
+runs <- 5
 
 obs <- n_distinct(covidData$iteration)
 
@@ -272,35 +273,24 @@ print(c("iDaly", round(idalyPSA,0)))
 print(c("icer", round(icerPSA,0)))
 
 
-plot(covidData_PSA$iDaly, covidData_PSA$iCost)
 
 
+# Cost-effectiveness plane
 ggplot(covidData_PSA) +
   geom_point(aes(x=iDaly,       y=iCost),       shape=21, size=2.5, 
              stroke=0.5, fill="#FFFFFFEE", color="deepskyblue4") +
-  geom_hline(yintercept=0, linetype="solid", color = "black", size=0.5) +
-  geom_vline(xintercept=0, linetype="solid", color = "black", size=0.5) +
-  theme_bw()
-
-#+
+  geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  theme_bw() +
   xlab("QALYs gained") + ylab("Incremental costs") +
-  scale_y_continuous(breaks=seq(-100, 400, 100), limits = c(-100, 400)) +
-  scale_x_continuous(breaks=seq(-100, 250, 50),  limits = c(-50,  250)) +
+  scale_y_continuous(breaks=seq(-4000000, 4000000, 1000000), limits = c(-4000000, 4000000)) +
+  scale_x_continuous(breaks=seq(-600, 600, 200),  limits = c(-600,  600)) +
   theme(axis.title        = element_text(size = 14), 
         axis.text         = element_text(size = 10,  color = "deepskyblue4"),
         axis.line         = element_line(size = 0,   color = "white"),
         axis.ticks        = element_line(size = 0.2, color = "black"),
         axis.ticks.length = unit(0.2, "cm"),
         panel.grid.major  = element_line(size = 0.25, colour = "gray97"))
-
-
-
-
-
-
-
-
-
 
 
 
@@ -335,19 +325,6 @@ ggplot(ceacData) +
         axis.ticks.length = unit(0.2, "cm"),
         panel.grid.major  = element_line(size = 0.25, colour = "gray99")) +
   theme_bw()
-  #panel_border(color = "black", size = 0.25, linetype = 1) +
-#ggsave(height=4.6, width=6.0, dpi=600, file="plots/ceacSample.svg")
-#ggsave(height=4.6, width=6.0, dpi=600, file="plots/ceacSample.pdf")
-
-
-
-
-
-
-
-
-
-
 
 
 
