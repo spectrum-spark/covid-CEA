@@ -102,7 +102,7 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_8.pdf")
 df <- covidData_Base %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="high TP" & 
                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
 
-df[df == "6-monthly boosting at 1.75 yr"] <- "6-monthly boosting" # Update 6-monthly name
+df[df == "6-monthly boosting at 1.75 yr"] <- "Half-yearly boosting at 1.75 yr" # Update 6-monthly name
 
 ggtitle <- "Scenario: older population, 80% initial vaccination coverage \n high TP, immune escape 1.5 yr"
 
@@ -122,7 +122,7 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_11.pdf")
 df <- covidData_Base %>% filter(group=="A" & immuneEscape=="2.50 yr" & tpLevel=="high TP" & 
                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
 
-df[df == "6-monthly boosting at 1.75 yr"] <- "6-monthly boosting" # Update 6-monthly name
+df[df == "6-monthly boosting at 1.75 yr"] <- "Half-yearly boosting at 1.75 yr" # Update 6-monthly name
 
 ggtitle <- "Scenario: older population, 80% initial vaccination coverage \n high TP, immune escape 2.5 yr"
 
@@ -198,7 +198,7 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_33.pdf")
 df <- covidData_Base %>% filter(popType=="Younger" & immuneEscape=="1.50 yr" & tpLevel=="high TP" & 
                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
 
-df[df == "6-monthly boosting at 1.75 yr"] <- "6-monthly boosting" # Update 6-monthly name
+df[df == "6-monthly boosting at 1.75 yr"] <- "Half-yearly boosting at 1.75 yr" # Update 6-monthly name
 
 ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, immune escape 1.5 yr"
 
@@ -220,7 +220,7 @@ df <- covidData_Base %>% filter(popType=="Younger" & immuneEscape=="2.50 yr" & t
 
 ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, immune escape 2.5 yr"
 
-df[df == "6-monthly boosting at 1.75 yr"] <- "6-monthly boosting" # Update 6-monthly name
+df[df == "6-monthly boosting at 1.75 yr"] <- "Half-yearly boosting at 1.75 yr" # Update 6-monthly name
 
 ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
    geom_point(size=2.5) + labs(shape = "", color = "") +
