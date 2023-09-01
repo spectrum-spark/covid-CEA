@@ -30,39 +30,39 @@ covidData[covidData == "1.75 (year)"]                           <- "1.75 yr"
 covidData[covidData == "2.0 (year)"]                            <- "2.00 yr"
 covidData[covidData == "2.25 (year)"]                           <- "2.25 yr"
 covidData[covidData == "2.5 (year)"]                            <- "2.50 yr"
-covidData[covidData == "further boosting pediatric"]            <- "Pediatric boosting"
-covidData[covidData == "further boosting random"]               <- "Random boosting"
-covidData[covidData == "further boosting high risk"]            <- "High-risk boosting"
-covidData[covidData == "no further boosting"]                   <- "No further boosting"
-covidData[covidData == "high risk boosting"]                    <- "6-monthly boosting"
-covidData[covidData == "further primary vaccination pediatric"] <- "Pediatric vaccination"
-covidData[covidData == "further primary vaccination random"]    <- "Random vaccination"
-covidData[covidData == "no further vaccination"]                <- "No further vaccination"
+covidData[covidData == "further boosting pediatric"]            <- "Pediatric boost"
+covidData[covidData == "further boosting random"]               <- "Random boost"
+covidData[covidData == "further boosting high risk"]            <- "High-risk boost"
+covidData[covidData == "no further boosting"]                   <- "No further boost"
+covidData[covidData == "high risk boosting"]                    <- "6-monthly boost"
+covidData[covidData == "further primary vaccination pediatric"] <- "Pediatric vax"
+covidData[covidData == "further primary vaccination random"]    <- "Random vax"
+covidData[covidData == "no further vaccination"]                <- "No further vax"
 
 
 # Create new column for number of vaccine doses by scenarios
 covidData$nVaxDoses <- 0
 covidData <- covidData %>%
-  mutate(nVaxDoses = replace(nVaxDoses, scenario == "Pediatric boosting",    11000),
-         nVaxDoses = replace(nVaxDoses, scenario == "High-risk boosting",    11000),
-         nVaxDoses = replace(nVaxDoses, scenario == "Random boosting",       11000),
-         nVaxDoses = replace(nVaxDoses, scenario == "Pediatric vaccination", 11000),
-         nVaxDoses = replace(nVaxDoses, scenario == "Random vaccination",    11000),
-         nVaxDoses = replace(nVaxDoses, scenario == "6-monthly boosting",    33000),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boosting 65+", 11821),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boosting 55+", 21721),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boosting 45+", 32372),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boosting 35+", 42754),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boosting 25+", 53213),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boosting 16+", 61185),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boosting 5+",  70388),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boosting 65+", 3804),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boosting 55+", 9237),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boosting 45+", 16861),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boosting 35+", 26826),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boosting 25+", 39232),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boosting 16+", 51980),
-         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boosting 5+",  70387))
+  mutate(nVaxDoses = replace(nVaxDoses, scenario == "Pediatric boost",    11000),
+         nVaxDoses = replace(nVaxDoses, scenario == "High-risk boost",    11000),
+         nVaxDoses = replace(nVaxDoses, scenario == "Random boost",       11000),
+         nVaxDoses = replace(nVaxDoses, scenario == "Pediatric vax", 11000),
+         nVaxDoses = replace(nVaxDoses, scenario == "Random vax",    11000),
+         nVaxDoses = replace(nVaxDoses, scenario == "6-month boost",    33000),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 65+", 11821),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 55+", 21721),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 45+", 32372),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 35+", 42754),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 25+", 53213),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 16+", 61185),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 5+",  70388),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boost 65+", 3804),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boost 55+", 9237),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boost 45+", 16861),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boost 35+", 26826),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boost 25+", 39232),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boost 16+", 51980),
+         nVaxDoses = replace(nVaxDoses, population.type  == "Younger" & scenario == "boost 5+",  70387))
 
 
 ### Objects needed for analysis ########################################################################################
@@ -174,7 +174,7 @@ model <- function(input){
     group_by(group, vaxCoverage, tpLevel, immuneEscape, ageScenario) %>% 
     mutate(daly0 = daly[1], cost0 = cost[1], iDaly = daly0 - daly, iCost = cost - cost0, icer = iCost/iDaly) %>% 
     unite(scenarioBoostStart, scenario, boostStart, sep = " at ", remove = FALSE) %>% 
-    unite(scenarioImmuneEscape, scenario, immuneEscape, sep = ", immune escape ", remove = FALSE) %>% 
+    unite(scenarioImmuneEscape, scenario, immuneEscape, sep = ", immune esc ", remove = FALSE) %>% 
     unite(scenarioVaxCoverage, scenario, vaxCoverage, sep = ", coverage ", remove = FALSE) 
   
   
@@ -257,7 +257,7 @@ covidData_Base <- read_csv("data/covidData_Base.csv")
 test  <- covidData_Base  %>%
   filter(popType=="Older" & immuneEscape=="1.50 yr" & tpLevel=="low TP" & 
            (boostStart=="Never" | boostStart=="1.75 yr") & 
-           (scenario=="No further boosting" | scenario=="High-risk boosting"))
+           (scenario=="No further boost" | scenario=="High-risk boost"))
 
 
 
