@@ -168,18 +168,12 @@ covidData_PSA <- data.frame()
 }
 
 
-# write_csv(covidData_PSA, "data/covidData_PSA.csv")
-
-# psaParam <- data.frame(dModerate.psa, dSevere.psa, dCritical.psa, cHomeGroupA.psa, cHomeGroupB.psa, 
-#                        cHomeGroupC.psa, dPostacute.psa, cWardGroupA.psa, cWardGroupB.psa, cWardGroupC.psa, 
-#                        cICUGroupA.psa, cICUGroupB.psa, cICUGroupC.psa, cDeliveryA.psa, cDeliveryB.psa, 
-#                        cDeliveryC.psa, cVaxGroupA.psa, cVaxGroupB.psa, cVaxGroupC.psa, nModerate.psa, 
-#                        nSevere.psa, nCritical.psa, nPostacute.psa)
-### Remove all objects except data frames containing results
-#rm(list=ls()[! ls() %in% c("covidData_Base", "covidData_OWSA", "covidData_PSA")])
-
-
-
+ggplot(dfTemp) +
+  geom_point(aes(x=iDaly,       y=iCost),       shape=21, size=2.5, 
+             stroke=0.5, fill="#FFFFFFEE", color="deepskyblue4") +
+  geom_hline(yintercept=0, linetype="solid", color = "black", size=0.5) +
+  geom_vline(xintercept=0, linetype="solid", color = "black", size=0.5) +
+  theme_bw()
 
 
 

@@ -87,6 +87,8 @@ write_csv(covidData, "data/covidData_All.csv")
 
 covidData <- read_csv("data/covidData_All.csv")
 
+
+
 covidData  <- covidData  %>%
   filter(population.type=="Older" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
            (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
@@ -316,7 +318,7 @@ ggplot(ceacData) +
   scale_x_continuous(breaks = seq(0, 25000, 5000),   limits = c(0, 25000)) +
   theme(axis.title        = element_text(size = 14), 
         axis.text         = element_text(size = 10,  color = "deepskyblue4"),
-        axis.line         = element_line(size = 0, color = "black"),
+        axis.line         = element_line(linewidth = 0, color = "black"),
         axis.ticks        = element_line(size = 0.2, color = "black"),
         axis.ticks.length = unit(0.2, "cm"),
         panel.grid.major  = element_line(size = 0.25, colour = "gray99")) +

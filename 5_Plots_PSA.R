@@ -1,4 +1,14 @@
-source("4_Model_PSA.R")
+##Not finalize yet
+#need update CEA (Group B&C) line annotate text
+#need double check scenario 7 filter data
+
+#method 1:5000
+source("4_Model_PSA_5000.R")
+
+#method 2:rand
+source("4_Model_PSA_rand.R")
+
+covidData_Base <- read.csv("data/covidData_Base.csv")
 
 # Load required packages
 library(ggplot2)   # for plots
@@ -34,6 +44,12 @@ yscale <- scale_y_continuous(breaks=seq(-450000, 750000, 150000),
                              limits = c(-450000, 750000), 
                              labels=units)
 
+xscale1 <- scale_x_continuous(breaks=seq(-50,  200,  25),  
+                             limits = c(-50,  200))
+yscale1 <- scale_y_continuous(breaks=seq(-450000, 1500000, 150000), 
+                             limits = c(-450000, 1500000), 
+                             labels=units)
+
 hline  <- geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5)
 vline  <- geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5)
 border <- panel_border(color = "#444444", size = 0.3, linetype = 1)
@@ -64,14 +80,57 @@ cetHigherA <- annotate("text", y = 750000, x = 15, size=3, label = "CET: 30,000"
 cetLowerB  <- annotate("text", y = 100000, x = 375, size=3, label = "CET: 200",    family = "univers")
 cetHigherB <- annotate("text", y = 650000, x = 375, size=3, label = "CET: 1,600",  family = "univers")
 
-# cetLowerC  <- annotate("text", y = 100000, x = 375, size=3, label = "CET: 100",    family = "univers")
-# cetHigherC <- annotate("text", y = 650000, x = 375, size=3, label = "CET: 1,000",  family = "univers")
+cetLowerC  <- annotate("text", y = 100000, x = 375, size=3, label = "CET: 100",    family = "univers")
+cetHigherC <- annotate("text", y = 650000, x = 375, size=3, label = "CET: 1,000",  family = "univers")
 
 
-# Scenario 7: Group A, 80% coverage, immune escape at 1.5 years, low TP, all scenarios 
+
+
+
+##high_coverage_scenarios_1_2_7_8_9_10
+
+# Scenario 1: Group A, 80% coverage, immune escape at 1.5 years, high TP, all scenarios
+df_Base <- covidData_Base %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="high TP"&
+                                       (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+df_PSA  <- covidData_PSA %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="high TP"&
+                                      (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+
+ggtitle <- "Older population, 80% coverage, high TP, immune escape 1.5 yr, all scenarios"
+
+ggplot() +
+  geom_point(data=df_PSA, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, fill="white", shape="circle filled") + 
+  geom_point(data=df_Base, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, shape="circle") + 
+  labs(shape = "", color = "") +
+  scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
+
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_01_03.pdf")
+
+
+# Scenario 2: Group A, 80% coverage, immune escape at 2.5 years, high TP, all scenarios
+df_Base <- covidData_Base %>% filter(group=="A" & immuneEscape=="2.50 yr" & tpLevel=="high TP"&
+                                       (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+df_PSA  <- covidData_PSA %>% filter(group=="A" & immuneEscape=="2.50 yr" & tpLevel=="high TP"&
+                                      (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+
+ggtitle <- "Older population, 80% coverage, high TP, immune escape 2.5 yr, all scenarios"
+
+ggplot() +
+  geom_point(data=df_PSA, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, fill="white", shape="circle filled") + 
+  geom_point(data=df_Base, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, shape="circle") + 
+  labs(shape = "", color = "") +
+  scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
+
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_02_04.pdf")
+
+
+# !!!Scenario 7: Group A, 80% coverage, immune escape at 1.5 years, low TP, all scenarios (plot makes no sense)
 df_Base <- covidData_Base %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="low TP"&
                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
-df_PSA  <- covidData_PSA  %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="low TP"&
+df_PSA  <- covidData_PSA %>% filter(group=="A" & immuneEscape=="1.50 yr" & tpLevel=="low TP"&
                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
 
 ggtitle <- "Older population, 80% coverage, low TP, immune escape 1.5 yr, boosting starts 2.0 yr"
@@ -84,4 +143,158 @@ ggplot() +
   xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
   geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
 
-ggsave(height=6, width=8, dpi=600, file="plots/PSA_07.pdf")
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_07_11.pdf")
+
+# Scenario 8: Group A, 80% coverage, immune escape at 2.5 years, low TP, all scenarios
+df_Base <- covidData_Base %>% filter(group=="A" & immuneEscape=="2.50 yr" & tpLevel=="low TP"&
+                                       (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+df_PSA  <- covidData_PSA %>% filter(group=="A" & immuneEscape=="2.50 yr" & tpLevel=="low TP"&
+                                      (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+
+ggtitle <- "Older population, 80% coverage, low TP, immune escape 2.5 yr, boosting starts 2.0 yr"
+
+ggplot() +
+  geom_point(data=df_PSA, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, fill="white", shape="circle filled") + 
+  geom_point(data=df_Base, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, shape="circle") + 
+  labs(shape = "", color = "") +
+  scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
+
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_08_12.pdf")
+
+# Scenario 9: Group B, 80% coverage, immune escape at 1.5 years, high TP, all scenarios
+df_Base <- covidData_Base %>% filter(group=="B" & immuneEscape=="1.50 yr" & tpLevel=="high TP"&
+                                       (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+df_PSA  <- covidData_PSA %>% filter(group=="B" & immuneEscape=="1.50 yr" & tpLevel=="high TP"&
+                                      (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+
+ggtitle <- "Younger population, 80% coverage, high TP, immune escape 1.5 yr, all scenarios"
+
+ggplot() +
+  geom_point(data=df_PSA, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, fill="white", shape="circle filled") + 
+  geom_point(data=df_Base, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, shape="circle") + 
+  labs(shape = "", color = "") +
+  scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
+
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_09.pdf")
+
+
+# Scenario 10: Group B, 80% coverage, immune escape at 2.5 years, high TP, all scenarios!!!!
+df_Base <- covidData_Base %>% filter(group=="B" & immuneEscape=="2.50 yr" & tpLevel=="high TP"&
+                                       (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+df_PSA  <- covidData_PSA %>% filter(group=="B" & immuneEscape=="2.50 yr" & tpLevel=="high TP"&
+                                      (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+
+ggtitle <- "Younger population, 80% coverage, high TP, immune escape 2.5 yr, all scenarios"
+
+ggplot() +
+  geom_point(data=df_PSA, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, fill="white", shape="circle filled") + 
+  geom_point(data=df_Base, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, shape="circle") + 
+  labs(shape = "", color = "") +
+  scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
+
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_10.pdf")
+
+
+##low_coverage_scenarios_5_6_13_14_15_16
+
+# Scenario 5: Group B, 20% coverage, immune escape at 2 years, high TP, all scenarios
+df_Base <- covidData_Base %>% filter(group=="C"& immuneEscape=="2.00 yr" & tpLevel=="high TP"&
+                                       (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+df_PSA  <- covidData_PSA %>% filter(group=="C" & immuneEscape=="2.00 yr" & tpLevel=="high TP"&
+                                      (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+
+ggtitle <- "Younger population, 20% coverage, high TP, immune escape 2.0 yr, all scenarios"
+
+ggplot() +
+  geom_point(data=df_PSA, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, fill="white", shape="circle filled") + 
+  geom_point(data=df_Base, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, shape="circle") + 
+  labs(shape = "", color = "") +
+  scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsC,  linewidth = 0.3, linetype="dashed") + cetLowerC + cetHigherC
+
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_5_15.pdf")
+
+# Scenario 6: Group B, 50% coverage, immune escape at 2 years, high TP, all scenarios 
+df_Base <- covidData_Base %>% filter(group=="B"& immuneEscape=="2.00 yr" & tpLevel=="high TP"&
+                                       (scenario=="High-risk boosting" | scenario=="6-monthly boosting") &
+                                       (vaxCoverage=="50.0%"))
+df_PSA  <- covidData_PSA %>% filter(group=="B" & immuneEscape=="2.00 yr" & tpLevel=="high TP"&
+                                      (scenario=="High-risk boosting" | scenario=="6-monthly boosting")&
+                                      (vaxCoverage=="50.0%"))
+
+ggtitle <- "Younger population, 50% coverage, high TP, immune escape 2.0 yr, all scenarios"
+
+ggplot() +
+  geom_point(data=df_PSA, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, fill="white", shape="circle filled") + 
+  geom_point(data=df_Base, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, shape="circle") + 
+  labs(shape = "", color = "") +
+  scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
+
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_6_13.pdf")
+
+
+# Scenario 13: Group B, 50% coverage, immune escape at 2 years, high TP, all scenarios: refer to scenario 6 
+
+# Scenario 14: Group B, 50% coverage, immune escape at 2 years, low TP, all scenarios
+df_Base <- covidData_Base %>% filter(group=="B" & immuneEscape=="2.00 yr" & tpLevel=="low TP"&
+                                       (scenario=="High-risk boosting" | scenario=="6-monthly boosting") &
+                                       (vaxCoverage=="50.0%"))
+df_PSA  <- covidData_PSA %>% filter(group=="B" & immuneEscape=="2.00 yr" & tpLevel=="low TP"&
+                                      (scenario=="High-risk boosting" | scenario=="6-monthly boosting")&
+                                      (vaxCoverage=="50.0%"))
+
+ggtitle <- "Younger population, 50% coverage, low TP, immune escape 2.0 yr, all scenarios"
+
+ggplot() +
+  geom_point(data=df_PSA, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, fill="white", shape="circle filled") + 
+  geom_point(data=df_Base, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, shape="circle") + 
+  labs(shape = "", color = "") +
+  scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
+
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_14.pdf")
+
+
+# Scenario 15: Group C, 20% coverage, immune escape at 2 years, high TP, all scenarios:refer to scenario 5  
+
+# Scenario 16: Group C, 20% coverage, immune escape at 2 years, low TP, all scenarios 
+df_Base <- covidData_Base %>% filter(group=="C"& immuneEscape=="2.00 yr" & tpLevel=="low TP"&
+                                       (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+df_PSA  <- covidData_PSA %>% filter(group=="C" & immuneEscape=="2.00 yr" & tpLevel=="low TP"&
+                                      (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+
+ggtitle <- "Younger population, 20% coverage, low TP, immune escape 2.0 yr, all scenarios"
+
+ggplot() +
+  geom_point(data=df_PSA, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, fill="white", shape="circle filled") + 
+  geom_point(data=df_Base, aes(x=iDaly, y=iCost, color=scenarioBoostStart), size=2.5, shape="circle") + 
+  labs(shape = "", color = "") +
+  scale_color_manual(values=c("purple2","darkcyan", "red3", "orange3", "gray30")) +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsC,  linewidth = 0.3, linetype="dashed") + cetLowerC + cetHigherC
+
+ggsave(height=6, width=8, dpi=600, file="plots/PSA_16.pdf")
+
+
+##many_boosters_scenarios_3_4_11_12
+
+# Scenario 3: Group A, 80% coverage, immune escape at 1.5 years, high TP, 6 monthly boosting: refer to scenario 1
+# Scenario 4: Group A, 80% coverage, immune escape at 2.5 years, high TP, 6 monthly boosting: refer to scenario 2
+# Scenario 11: Group B, 80% coverage, immune escape at 1.5 years, high TP, 6 monthly boosting: refer to scenario 7
+# Scenario 12: Group B, 80% coverage, immune escape at 2.5 years, high TP, 6 monthly boosting: refer to scenario 8
+
+
+
+
+
+

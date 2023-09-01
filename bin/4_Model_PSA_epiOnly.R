@@ -198,9 +198,6 @@ print(c("iDaly", round(idalyPSA,0)))
 print(c("icer", round(icerPSA,0)))
 
 
-plot(covidData_PSA$iDaly, covidData_PSA$iCost)
-
-
 ggplot(dfTemp) +
   geom_point(aes(x=iDaly,       y=iCost),       shape=21, size=2.5, 
              stroke=0.5, fill="#FFFFFFEE", color="deepskyblue4") +
