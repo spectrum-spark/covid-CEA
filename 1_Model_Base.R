@@ -38,6 +38,13 @@ covidData[covidData == "high risk boosting"]                    <- "6-monthly bo
 covidData[covidData == "further primary vaccination pediatric"] <- "Pediatric vax"
 covidData[covidData == "further primary vaccination random"]    <- "Random vax"
 covidData[covidData == "no further vaccination"]                <- "No further vax"
+covidData[covidData == "boosting 65+"]                          <- "boost 65+"
+covidData[covidData == "boosting 55+"]                          <- "boost 55+"
+covidData[covidData == "boosting 45+"]                          <- "boost 45+"
+covidData[covidData == "boosting 35+"]                          <- "boost 35+"
+covidData[covidData == "boosting 25+"]                          <- "boost 25+"
+covidData[covidData == "boosting 16+"]                          <- "boost 16+"
+covidData[covidData == "boosting 5+"]                           <- "boost 5+"
 
 
 # Create new column for number of vaccine doses by scenarios
@@ -48,7 +55,7 @@ covidData <- covidData %>%
          nVaxDoses = replace(nVaxDoses, scenario == "Random boost",       11000),
          nVaxDoses = replace(nVaxDoses, scenario == "Pediatric vax", 11000),
          nVaxDoses = replace(nVaxDoses, scenario == "Random vax",    11000),
-         nVaxDoses = replace(nVaxDoses, scenario == "6-month boost",    33000),
+         nVaxDoses = replace(nVaxDoses, scenario == "6-monthly boost",    33000),
          nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 65+", 11821),
          nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 55+", 21721),
          nVaxDoses = replace(nVaxDoses, population.type  == "Older"   & scenario == "boost 45+", 32372),

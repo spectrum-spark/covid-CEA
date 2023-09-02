@@ -103,8 +103,8 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_3b.pdf")
 
 # Fig 5a
 df <- covidData_Base %>% filter(popType=="Older" & immuneEscape=="1.50 yr" & tpLevel=="high TP" & 
-                                  (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
-df[df == "6-monthly boosting at 1.75 yr"] <- "Half-yearly boosting at 1.75 yr" # Update 6-monthly name
+                                  (scenario=="High-risk boost" | scenario=="6-monthly boost"))
+df[df == "6-monthly boost at 1.75 yr"] <- "Half-yearly boost at 1.75 yr" # Update 6-monthly name
 ggtitle <- "Scenario: older population, 80% initial vaccination coverage \n high TP, immune escape 1.5 yr"
 ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
   geom_point(size=2.5) + labs(shape = "", color = "") +
@@ -117,8 +117,8 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_5a.pdf")
 
 # Fig 5b
 df <- covidData_Base %>% filter(popType=="Younger" & immuneEscape=="1.50 yr" & tpLevel=="high TP" & 
-                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
-df[df == "6-monthly boosting at 1.75 yr"] <- "Half-yearly boosting at 1.75 yr" # Update 6-monthly name
+                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"))
+df[df == "6-monthly boost at 1.75 yr"] <- "Half-yearly boost at 1.75 yr" # Update 6-monthly name
 ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, immune escape 1.5 yr"
 ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
    geom_point(size=2.5) + labs(shape = "", color = "") +
@@ -131,8 +131,8 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_5b.pdf")
 
 # Fig 5c
 df <- covidData_Base %>% filter(popType=="Older" & immuneEscape=="2.50 yr" & tpLevel=="high TP" & 
-                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
-df[df == "6-monthly boosting at 1.75 yr"] <- "Half-yearly boosting at 1.75 yr" # Update 6-monthly name
+                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"))
+df[df == "6-monthly boost at 1.75 yr"] <- "Half-yearly boost at 1.75 yr" # Update 6-monthly name
 ggtitle <- "Scenario: older population, 80% initial vaccination coverage \n high TP, immune escape 2.5 yr"
 ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
    geom_point(size=2.5) + labs(shape = "", color = "") +
@@ -145,9 +145,9 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_5c.pdf")
 
 # Fig 5d
 df <- covidData_Base %>% filter(popType=="Younger" & immuneEscape=="2.50 yr" & tpLevel=="high TP" & 
-                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"))
+                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"))
 ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, immune escape 2.5 yr"
-df[df == "6-monthly boosting at 1.75 yr"] <- "Half-yearly boosting at 1.75 yr" # Update 6-monthly name
+df[df == "6-monthly boost at 1.75 yr"] <- "Half-yearly boost at 1.75 yr" # Update 6-monthly name
 ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
    geom_point(size=2.5) + labs(shape = "", color = "") +
    scale_shape_manual(values=c("asterisk", "circle open", "square open", "triangle open", "diamond open")) +
@@ -161,8 +161,8 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_5d.pdf")
 
 # Fig 7c
 df <- covidData_Base %>% filter(popType=="Younger" & immuneEscape=="2.00 yr" & tpLevel=="high TP" & 
-                                   (scenario=="High-risk boosting" | scenario=="Pediatric vaccination" | 
-                                       scenario=="Random vaccination") & boostStart=="2.00 yr" & 
+                                   (scenario=="High-risk boost" | scenario=="Pediatric vax" | 
+                                       scenario=="Random vax") & boostStart=="2.00 yr" & 
                                    (vaxCoverage=="20.0%" | vaxCoverage=="50.0%"))
 ggtitle <- "Scenario: younger population, high TP, immune escape 2.0 yr, boosting starts 2.0 yr"
 ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioVaxCoverage, color=scenarioVaxCoverage)) +
@@ -178,7 +178,7 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_7c.pdf")
 
 # Fig F4a
 df <- covidData_Base %>% filter(popType=="Younger" & (tpLevel=="low TP" | tpLevel=="high TP") & (vaxCoverage=="20.0%") & 
-                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"| scenario=="Random vaccination"| scenario=="Pediatric vaccination"))
+                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"| scenario=="Random vax"| scenario=="Pediatric vax"))
 df <- df %>% mutate(popTP = paste0(scenario, sep = ", ", tpLevel))
 ggtitle <- "Scenario: younger population, 20% initial vaccination coverage \n high and low TP, immune escape 2.0 yr"
 ggplot(df, aes(x=iDaly, y=iCost, shape=popTP, color=popTP)) +
@@ -193,7 +193,7 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_F4a.pdf")
 # Fig F4b
 df <- covidData_Base %>% filter(popType=="Younger" & 
                                    (tpLevel=="low TP" | tpLevel=="high TP") &
-                                   (scenario=="High-risk boosting" | scenario=="6-monthly boosting"| scenario=="Random vaccination"| scenario=="Pediatric vaccination") &
+                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"| scenario=="Random vax"| scenario=="Pediatric vax") &
                                    (vaxCoverage=="50.0%"))
 df <- df %>% mutate(popTP = paste0(scenario, sep = "-", tpLevel))
 ggtitle <- "Scenario: younger population, 50% initial vaccination coverage \n high and low TP, immune escape 2.0 yr"
@@ -348,11 +348,13 @@ yscale     <- scale_y_continuous(breaks = seq(-600000, 1500000, 300000),
                                   limits = c(-600000, 1500000), 
                                   labels = units)
  
- 
+theme <- theme + theme(legend.key.size = unit(0.45, 'cm'))
+
+
 # Figure 6a: Group A, 80% coverage, immune escape at 2 years, high TP, age scenarios
 df <- covidData_Base %>% 
    filter(group=="A" & tpLevel=="high TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))
-df[df == "boosting 5+"]   <- "boosting 05+"
+df[df == "boost 5+"]   <- "boost 05+"
 ggtitle <- "Scenario: older population, 80% coverage, immune escape / boosting 2 yr, high TP"
 figure_6a <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
    geom_point(size=2.5) + labs(shape = "", color = "") +
@@ -366,7 +368,7 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_6a.pdf")
 # Figure 6b: Group A, 80% coverage, immune escape at 2 years, low TP, age scenarios 
 df <- covidData_Base %>% 
    filter(group=="A" & tpLevel=="low TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))
-df[df == "boosting 5+"]   <- "boosting 05+"
+df[df == "boost 5+"]   <- "boost 05+"
 ggtitle <- "Scenario: older population, 80% coverage, immune escape / boosting 2 yr, low TP"
 figure_6b <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
    geom_point(size=2.5) + labs(shape = "", color = "") +
@@ -387,7 +389,7 @@ ggsave(height=10, width=8, dpi=600, file="plots/figure_6.pdf")
 # Figure F2a: Group B, 80% coverage, immune escape at 2 years, high TP, age scenarios
 df <- covidData_Base %>% 
    filter(group=="B" & tpLevel=="high TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))
-df[df == "boosting 5+"]   <- "boosting 05+"
+df[df == "boost 5+"]   <- "boost 05+"
 ggtitle <- "Scenario: young population, 80% coverage, immune escape / boosting 2 yr, high TP"
 figure_F2a <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
    geom_point(size=2.5) + labs(shape = "", color = "") +
@@ -402,7 +404,7 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_F2a.pdf")
 # Figure F2b: Group B, 80% coverage, immune escape at 2 years, low TP, age scenarios 
 df <- covidData_Base %>% 
    filter(group=="B" & tpLevel=="low TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))
-df[df == "boosting 5+"]   <- "boosting 05+"
+df[df == "boost 5+"]   <- "boost 05+"
 ggtitle <- "Scenario: young population, 80% coverage, immune escape / boosting 2 yr, low TP"
 figure_F2b <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
    geom_point(size=2.5) + labs(shape = "", color = "") +
@@ -417,6 +419,4 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_F2b.pdf")
 # Figure F2 = F2a + F2b
 plot_grid(figure_F2a, figure_F2b, rows = 2)
 ggsave(height=10, width=8, dpi=600, file="plots/figure_F2.pdf")
-
- 
 
