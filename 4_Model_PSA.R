@@ -87,6 +87,29 @@ write_csv(covidData, "data/covidData_All.csv")
 
 covidData <- read_csv("data/covidData_All.csv")
 
+##Take average of every 5 rows
+# install.packages("data.table")
+library(data.table)
+
+dt <- as.data.table(covidData) # Convert the data frame to a data.table
+
+dt[, group_id := ceiling(.I / 5)] # Create a grouping variable based on row index
+
+avg_dt <- dt[, lapply(.SD, mean, na.rm = TRUE), by = group_id, .SDcols = 12:25] # Calculate average for columns 12:25
+
+first_dt <- dt[, .SD[1, ], by = group_id, .SDcols = c(1:11, 26:28)] # Take the first row values for columns 1:11 and 26:28 in each group
+
+final_dt <- first_dt[avg_dt, on = "group_id"] # Combine the data
+
+final_dt[, group_id.1 := NULL] # Drop the 'group_id' if needed
+
+df_final <- as.data.frame(final_dt) # Convert back to data frame if needed
+
+covidData <- df_final
+
+rm(df_final, final_dt, first_dt, dt, avg_dt)
+##
+
 
 
 covidData  <- covidData  %>%
@@ -96,7 +119,7 @@ covidData  <- covidData  %>%
 
 
 ### Calculate Costs and DALYs ########################################################################################
-
+set.seed(123)
 covidData_PSA <- data.frame()
 runs <- 5
 
