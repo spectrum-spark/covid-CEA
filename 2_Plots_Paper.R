@@ -1,0 +1,112 @@
+source("1_Model_Base.R")
+
+### Load required packages
+library(tidyverse) # data management package
+library(ggplot2)   # for plots
+library(cowplot)   # for nicer themes in plots
+library(showtext)  # for custom fonts in plots
+
+
+### default settings for all plots
+theme_set(theme_classic(base_family = "univers"))
+font_add("univers",   "fonts/UniversRegular.ttf")
+font_add("universCn",   "fonts/UniversCnRg.ttf")
+showtext_auto()
+
+
+cetWoodsA <- c(low=19000, high=30000)
+cetWoodsB <- c(low=200,  high=1600)
+cetWoodsC <- c(low=100,  high=1000)
+
+xlab <- xlab("DALYs averted per 100,000 pop")
+ylab <- ylab("Incremental costs ($) per 100,000 pop")
+
+units <- function(n) {
+  labels <- ifelse(n < -1e9, paste0(round(n/1e6), 'M'),  # less than thousands
+                   ifelse(n < 1e6, paste0(round(n/1e3), 'k'),  # in thousands
+                          paste0(round(n/1e6, 1), 'M')  # in millions
+                   ))
+  return(labels)
+}
+
+xscale <- scale_x_continuous(breaks=seq(-40,  400,  40),  
+                             limits = c(-40,  400))
+yscale <- scale_y_continuous(breaks=seq(-450000, 750000, 150000), 
+                             limits = c(-450000, 750000), 
+                             labels=units)
+
+hline  <- geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5)
+vline  <- geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5)
+border <- panel_border(color = "#444444", size = 0.3, linetype = 1)
+theme  <- theme(axis.title        = element_text(size = 13), 
+                axis.text         = element_text(size = 12,  color = "black"),
+                axis.line         = element_line(linewidth = 0.01, color = "#444444"),
+                axis.ticks        = element_line(linewidth = 0.3, color = "black"),
+                axis.ticks.length = unit(0.1, "cm"),
+                panel.grid.major  = element_line(linewidth = 0.3, colour = "gray97"),
+                plot.title        = element_text(size = 14, colour = "black", 
+                                                 margin=margin(t=5, b=5), hjust = 0.1),
+                legend.position = c(1, 0), 
+                legend.justification = c(1.02, 0), 
+                legend.margin = margin(0, 0, 0, 0),
+                #legend.spacing.x = unit(0, 'cm'),
+                legend.spacing.y = unit(0, 'cm'),
+                legend.background = element_rect(fill="transparent"),
+                legend.text = element_text(size=12, family = "DejaVu Sans"),   #change legend text font size
+                legend.title = element_text(size=12), #change legend title font size
+                legend.key.size = unit(0.5, 'cm'),      #change legend key size
+) 
+
+cetLowerA  <- annotate("text", y = 750000, x = 90, size=4, label = "CET = $19,000", family = "DejaVu Sans")
+cetHigherA <- annotate("text", y = 680000, x =  -10,  size=4, label = "CET = $30,000", family = "DejaVu Sans")
+
+cetLowerB  <- annotate("text", y = 100000, x = 375, size=4, label = "CET = $200",    family = "DejaVu Sans")
+cetHigherB <- annotate("text", y = 650000, x = 375, size=4, label = "CET = $1,600",  family = "DejaVu Sans")
+
+cetLowerC  <- annotate("text", y = 100000, x = 375, size=4, label = "CET = $100",    family = "DejaVu Sans")
+cetHigherC <- annotate("text", y = 650000, x = 375, size=4, label = "CET = $1,000",  family = "DejaVu Sans")
+
+## Style guide for points on scatter plots
+# filled shapes for 1.5y and plus/open for 2.5y; plus/open shapes for "low TP" and filled for "high TP"
+# shapes: circle, square, triangle, diamond; their plus and open counterparts; asterisk, cross, plus
+
+
+
+
+# Fig 3a
+df <- covidData_Base %>% filter(popType=="Older" & tpLevel=="high TP" & boostStart=="2.00 yr" & 
+                                  (immuneEscape=="1.50 yr" | immuneEscape=="2.50 yr"))
+#ggtitle <- "Scenario: older population, 80% initial vaccination coverage \n high TP, boosting starts 2.0 yr"
+df$scenarioImmuneEscape<- factor(df$scenarioImmuneEscape,levels = c("Pediatric boost, immune esc 1.50 yr","Pediatric boost, immune esc 2.50 yr","High-risk boost, immune esc 1.50 yr","High-risk boost, immune esc 2.50 yr",  "Random boost, immune esc 1.50 yr" ,"Random boost, immune esc 2.50 yr"))
+figure3a <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioImmuneEscape, color=scenarioImmuneEscape)) +
+  geom_point(size=2.5) + labs(shape = "", color = "") +
+  scale_shape_manual(values=c("circle", "circle open", "square", "square open", "triangle", "triangle open"),name="older population") +
+  scale_color_manual(values=c("#ff0000","#ff0000", "#fa8072", "#fa8072", "#b22222", "#b22222"),name="older population") +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme+ theme(legend.position = c(1.05, 0.60)) + #ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA+
+  theme(text=element_text(family="DejaVu Sans"))
+
+
+
+# Fig 3b
+df <- covidData_Base %>% filter(group == "B" & (immuneEscape == "1.50 yr" | immuneEscape == "2.50 yr") &
+                                  tpLevel == "high TP" & boostStart == "2.00 yr")
+
+#ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, boosting starts 2.0 yr"
+df$scenarioImmuneEscape<- factor(df$scenarioImmuneEscape,levels = c("Pediatric boost, immune esc 1.50 yr","Pediatric boost, immune esc 2.50 yr","High-risk boost, immune esc 1.50 yr","High-risk boost, immune esc 2.50 yr",  "Random boost, immune esc 1.50 yr" ,"Random boost, immune esc 2.50 yr"))
+
+figure3b<- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioImmuneEscape, color=scenarioImmuneEscape)) + 
+  geom_point(size=2.5) + labs(shape = "", color = "") +
+  scale_shape_manual(values=c("circle", "circle open", "square", "square open","triangle", "triangle open"),name="younger population") +
+  scale_color_manual(values=c("#1e90ff", "#1e90ff", "#87cefa","#87cefa",  "#000080", "#000080"),name="younger population") +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + #ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB+
+  theme(text=element_text(family="DejaVu Sans")) + theme(legend.position = c(1.05, 0.0))
+
+plot_grid(figure3a, figure3b, labels = c("(a)","(b)"),label_x=0.12,label_y = 0.98)
+
+ggsave(height=5, width=12, dpi=600, file="plots/figure_3.pdf")
+
+
+
+
