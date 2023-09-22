@@ -1,4 +1,5 @@
-# covid-CEA
+# COVID Cost-effectiveness Analysis
+
 This repository contains the technical documentation for the cost-effectiveness analysis of COVID-19 Vaccination Strategies in the Western Pacific Region
 
 Please cite this as:
@@ -7,9 +8,20 @@ Carvalho N, Akpan E, Wang Y, Bourke M, Abraham P, McVernon J. Cost-effectiveness
 Correspondence to: natalie.carvalho@unimelb.edu.au
 
 
+### Code authorship
+
+
+### Instructions
+
+This repository also contains code to conduct cost-effectiveness analysis, as part of work examining cost-effectiveness of boosting allocations
+
+This code here takes in model outputs from [epidemic simulations](https://github.com/spectrum-spark/covid_singlestrain_scenarios/tree/singlestrain-paper), which are already stored in the [/data](/data) folder.
+
+To produce the plots in the main paper, run [2_Plots_Paper.R](/2_Plots_Paper.R); the plots are saved in [/plots](/plots) folder.
+
 ---
 
-This repository also contains code to conduct cost-effectiveness analysis, as part of work examining cost-effectiveness of boosting allocations, presented to the [Advisory Committee on Immunization and Vaccines-related Implementation Research (IVIR-AC) in February 2023](https://terrance.who.int/mediacentre/data/sage/IVIR-AC_Pink Book Feb2023.pdf). This code here takes in model outputs from (epidemic simulations)[https://github.com/spectrum-spark/covid_singlestrain_scenarios/tree/singlestrain-paper]
+*The work in this repository presented to the [Advisory Committee on Immunization and Vaccines-related Implementation Research (IVIR-AC) in February 2023](https://terrance.who.int/mediacentre/data/sage/IVIR-AC_Pink%20Book%20Feb2023.pdf).* It is also an accompaniment to the following paper and report:
 
 Thao P. Le, Eamon Conway, Isobel Abell, Patrick Abraham, Edifofon Akpan, Christopher M. Baker, Patricia T. Campbell, Natalie Carvalho, Deborah Cromer, Michael J. Lydeamore, Yasmine McDonough, Ivo Mueller, Gerard Ryan, Camelia Walker, Yingying Wang and Jodie McVernon, **Cost-effective boosting allocations in the post-Omicron era of COVID-19 management**, in preparation, 2023.
 
