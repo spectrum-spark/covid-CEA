@@ -23,7 +23,7 @@ To produce the plots in the main paper, run [2_Plots_Paper.R](/2_Plots_Paper.R);
 
 *The work in this repository presented to the [Advisory Committee on Immunization and Vaccines-related Implementation Research (IVIR-AC) in February 2023](https://terrance.who.int/mediacentre/data/sage/IVIR-AC_Pink%20Book%20Feb2023.pdf).* It is also an accompaniment to the following paper and report:
 
-Thao P. Le, Eamon Conway, Isobel Abell, Patrick Abraham, Edifofon Akpan, Christopher M. Baker, Patricia T. Campbell, Natalie Carvalho, Deborah Cromer, Michael J. Lydeamore, Yasmine McDonough, Ivo Mueller, Gerard Ryan, Camelia Walker, Yingying Wang and Jodie McVernon, **Cost-effective boosting allocations in the post-Omicron era of COVID-19 management**, in preparation, 2023.
+Thao P. Le, Eamon Conway, Edifofon Akpan, Isobel Abell, Patrick Abraham, Christopher M. Baker, Patricia T. Campbell, Deborah Cromer, Michael J. Lydeamore, Yasmine McDonough, Ivo Mueller, Gerard Ryan, Camelia Walker, Yingying Wang, Jodie McVernon and Natalie Carvalho,  **Cost-effective boosting allocations in the post-Omicron era of COVID-19 management**, in preparation, 2023.
 
 
 Eamon Conway, Thao P. Le, Isobel Abell, Patrick Abraham, Edifofon Akpan, Christopher Baker, Mackenzie Bourke, Patricia T. Campbell, Natalie Carvalho, Deborah Cromer, Alexandra B. Hogan, Michael J. Lydeamore, Yasmine McDonough, Ivo Mueller, Gerald Ryan, Camelia Walker, Yingying Wang, and Jodie McVernon, **A flexible immunity model-based framework for evaluation of likely impacts of emerging variants & vaccines: Technical Report**, 2023.
