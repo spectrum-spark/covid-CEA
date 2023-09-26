@@ -384,8 +384,8 @@ plot_grid(figure_6a, figure_6b, rows = 2)
 ggsave(height=10, width=8, dpi=600, file="plots/figure_6.pdf")
  
 
- 
 
+# OLD Figure F2 (figure labelings and arrangements have changed)
 # Figure F2a: Group B, 80% coverage, immune escape at 2 years, high TP, age scenarios
 df <- covidData_Base %>% 
    filter(group=="B" & tpLevel=="high TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))

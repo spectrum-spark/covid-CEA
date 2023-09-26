@@ -164,7 +164,7 @@ ggplot(df, aes(x=parameter,y=value, fill=type, colour=type)) +
 ggsave(height=6, width=9, dpi=600, file="plots/figure_F8.pdf")
 
 
-##### Fig new  ##################
+##### Fig new  ##################  - Figure F1
 
 # Get the base case icer value
 baseCase <- covidData_Base %>%  
@@ -218,7 +218,7 @@ figure_6month_1 <- ggplot(df, aes(x=parameter,y=value, fill=type, colour=type)) 
             aes(label = comma(round(value))), 
             hjust= ifelse(subset(df, type=="High value input", select = value) < baseCase, 1.15, -0.15),
             size = 4, family = "univers") +
-  ggtitle("Scenario: younger population, 80% initial vaccination coverage \n immune escape starts 1.5 yr, 6-monthly boosting")
+  ggtitle("Scenario: younger population, 80% initial vaccination coverage \n immune escape starts 1.5 yr, half-yearly boosting")
 
 ggsave(height=6, width=9, dpi=600, file="plots/figure_6month_1.pdf")
 
@@ -274,10 +274,16 @@ figure_6month_2 <- ggplot(df, aes(x=parameter,y=value, fill=type, colour=type)) 
             aes(label = comma(round(value))), 
             hjust= ifelse(subset(df, type=="High value input", select = value) < baseCase, 1.15, -0.15),
             size = 4, family = "univers") +
-  ggtitle("Scenario: younger population, 80% initial vaccination coverage \n immune escape starts 2.5 yr, 6-monthly boosting")
+  ggtitle("Scenario: younger population, 80% initial vaccination coverage \n immune escape starts 2.5 yr, half-yearly boosting")
 
 ggsave(height=6, width=9, dpi=600, file="plots/figure_6month_2.pdf")
 
 # Figure 6 monthly = figure_6month_1.5yr + figure_6month_2.5yr
 plot_grid(figure_6month_1, figure_6month_2, rows = 2)
 ggsave(height=8, width=10, dpi=600, file="plots/figure_6month.pdf")
+
+
+plot_grid(figure_6month_1, figure_6month_2, rows = 2, labels = c("(a)","(b)"),label_x=0.12,label_y = 0.98)
+ggsave(height=8, width=10, dpi=600, file="plots/figure_F1.pdf")
+
+

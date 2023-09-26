@@ -10,12 +10,21 @@ Correspondence to: natalie.carvalho@unimelb.edu.au
 
 ### Code authorship
 
+Edifofon Akphan
+Yingying Wang
+
+
 
 ### Instructions
 
 This repository also contains code to conduct cost-effectiveness analysis, as part of work examining cost-effectiveness of boosting allocations
 
 This code here takes in model outputs from [epidemic simulations](https://github.com/spectrum-spark/covid_singlestrain_scenarios/tree/singlestrain-paper), which are already stored in the [/data](/data) folder.
+
+
+Base plots: https://github.com/spectrum-spark/covid-CEA/blob/main/2_Plots_Base.R
+
+Tornado plots (sensitivity analysis): https://github.com/spectrum-spark/covid-CEA/blob/main/3_Plots_DSA.R
 
 To produce the plots in the main paper, run [2_Plots_Paper.R](/2_Plots_Paper.R); the plots are saved in [/plots](/plots) folder.
 
