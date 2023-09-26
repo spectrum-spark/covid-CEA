@@ -10,8 +10,7 @@ Correspondence to: natalie.carvalho@unimelb.edu.au
 
 ### Code authorship
 
-Edifofon Akphan
-Yingying Wang
+The code in this repository was primarily written by Edifofon Akpan and Yingying Wang.
 
 
 
