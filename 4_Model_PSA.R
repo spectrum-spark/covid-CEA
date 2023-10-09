@@ -90,32 +90,54 @@ covidData <- read_csv("data/covidData_All.csv")
 ##Take average of every 5 rows
 # install.packages("data.table")
 library(data.table)
-
 dt <- as.data.table(covidData) # Convert the data frame to a data.table
-
 dt[, group_id := ceiling(.I / 5)] # Create a grouping variable based on row index
-
 avg_dt <- dt[, lapply(.SD, mean, na.rm = TRUE), by = group_id, .SDcols = 12:25] # Calculate average for columns 12:25
-
 first_dt <- dt[, .SD[1, ], by = group_id, .SDcols = c(1:11, 26:28)] # Take the first row values for columns 1:11 and 26:28 in each group
-
 final_dt <- first_dt[avg_dt, on = "group_id"] # Combine the data
-
 final_dt[, group_id.1 := NULL] # Drop the 'group_id' if needed
-
 df_final <- as.data.frame(final_dt) # Convert back to data frame if needed
-
-covidData <- df_final
-
+covidData_ave <- df_final
 rm(df_final, final_dt, first_dt, dt, avg_dt)
+
+write_csv(covidData_ave, "data/covidData_All_ave.csv")
+
+covidData_ave <- read_csv("data/covidData_All_ave.csv")
 ##
 
+# ### Select Epi scenarios for PSA ("All" Epi output methods)
+# df <- covidData  %>%
+#   filter(population.type=="Older" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
+#            (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
+#            (scenario=="No further boosting" | scenario=="High-risk boosting"))
 
-
-covidData  <- covidData  %>%
+### Select Epi scenarios for PSA (Average" Epi output methods)
+df  <- covidData_ave  %>%
   filter(population.type=="Older" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
            (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
            (scenario=="No further boosting" | scenario=="High-risk boosting"))
+
+df  <- covidData_ave  %>%
+  filter(population.type=="Older" & immune.escape.starts=="2.50 yr" & transmission.potential.level=="high TP" & 
+           (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
+           (scenario=="No further boosting" | scenario=="High-risk boosting"))
+
+
+df  <- covidData_ave  %>%
+  filter(population.type=="Younger" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
+           (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
+           (scenario=="No further boosting" | scenario=="High-risk boosting"))
+
+
+df  <- covidData_ave  %>%
+  filter(population.type=="Older" & immune.escape.starts=="2.50 yr" & transmission.potential.level=="high TP" & 
+           (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
+           (scenario=="No further boosting" | scenario=="Pediatric boosting"))
+
+df  <- covidData_ave  %>%
+  filter(population.type=="Younger" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
+           (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
+           (scenario=="No further boosting" | scenario=="Pediatric boosting"))
 
 
 ### Calculate Costs and DALYs ########################################################################################
@@ -123,37 +145,37 @@ set.seed(123)
 covidData_PSA <- data.frame()
 runs <- 5
 
-obs <- n_distinct(covidData$iteration)
+obs <- n_distinct(df$iteration)
 
 
 for (i in 1:runs){
   
   # Number of vaccine doses
-  nVaxDoses    <- covidData$nVaxDoses
+  nVaxDoses    <- df$nVaxDoses
   
   # Scenario identifiers
-  popSize      <- covidData$population.size
-  popType      <- covidData$population.type
-  scenario     <- covidData$scenario
-  vaxCoverage  <- covidData$X1st.year.vaccination.coverage
-  tpLevel      <- covidData$transmission.potential.level
-  boostStart   <- covidData$boosting.starts
-  immuneEscape <- covidData$immune.escape.starts
-  timePeriod   <- covidData$time.period
-  ageScenario  <- covidData$ageScenario
-  group        <- ifelse(covidData$population.type=="Older", "A",
-                         ifelse(covidData$population.type=="Younger" & covidData$X1st.year.vaccination.coverage !="20.0%", "B",
+  popSize      <- df$population.size
+  popType      <- df$population.type
+  scenario     <- df$scenario
+  vaxCoverage  <- df$X1st.year.vaccination.coverage
+  tpLevel      <- df$transmission.potential.level
+  boostStart   <- df$boosting.starts
+  immuneEscape <- df$immune.escape.starts
+  timePeriod   <- df$time.period
+  ageScenario  <- df$ageScenario
+  group        <- ifelse(df$population.type=="Older", "A",
+                         ifelse(df$population.type=="Younger" & df$X1st.year.vaccination.coverage !="20.0%", "B",
                                 "C"))
-  iteration   <- covidData$iteration
+  iteration   <- df$iteration
   
   # Categories of COVID-19 health states and deaths
-  nAsymptom   <- covidData$infections_all_ages             - covidData$symptomatic_infections_all_ages
-  nHomecare   <- covidData$symptomatic_infections_all_ages - covidData$admissions_all_ages
-  nAdmitWard  <- covidData$admissions_all_ages             - covidData$ICU_admissions_all_ages
-  nAdmitICU   <- covidData$ICU_admissions_all_ages
-  nOccupyWard <- covidData$ward_occupancy_all_ages
-  nOccupyICU  <- covidData$ICU_occupancy_all_ages
-  nDeaths     <- covidData$deaths_all_ages
+  nAsymptom   <- df$infections_all_ages             - df$symptomatic_infections_all_ages
+  nHomecare   <- df$symptomatic_infections_all_ages - df$admissions_all_ages
+  nAdmitWard  <- df$admissions_all_ages             - df$ICU_admissions_all_ages
+  nAdmitICU   <- df$ICU_admissions_all_ages
+  nOccupyWard <- df$ward_occupancy_all_ages
+  nOccupyICU  <- df$ICU_occupancy_all_ages
+  nDeaths     <- df$deaths_all_ages
   
   # Random draws from specified probability distribution
   # Beta
@@ -222,15 +244,15 @@ for (i in 1:runs){
   nPostacute.psa <- runif(obs, min = nPostacute["low"], max = nPostacute["high"])
   
   # Calculate Discounted YLLs by age groups and the total YLLs
-  yll0.9   <- ifelse(popType=="Older", covidData$deaths0.9   * (1-exp(-dRate * lifeExpU[1]))/dRate, covidData$deaths0.9   * (1-exp(-dRate * lifeExpM[1]))/dRate)
-  yll10.19 <- ifelse(popType=="Older", covidData$deaths10.19 * (1-exp(-dRate * lifeExpU[2]))/dRate, covidData$deaths10.19 * (1-exp(-dRate * lifeExpM[2]))/dRate)
-  yll20.29 <- ifelse(popType=="Older", covidData$deaths20.29 * (1-exp(-dRate * lifeExpU[3]))/dRate, covidData$deaths20.29 * (1-exp(-dRate * lifeExpM[3]))/dRate)
-  yll30.39 <- ifelse(popType=="Older", covidData$deaths30.39 * (1-exp(-dRate * lifeExpU[4]))/dRate, covidData$deaths30.39 * (1-exp(-dRate * lifeExpM[4]))/dRate)
-  yll40.49 <- ifelse(popType=="Older", covidData$deaths40.49 * (1-exp(-dRate * lifeExpU[5]))/dRate, covidData$deaths40.49 * (1-exp(-dRate * lifeExpM[5]))/dRate)
-  yll50.59 <- ifelse(popType=="Older", covidData$deaths50.59 * (1-exp(-dRate * lifeExpU[6]))/dRate, covidData$deaths50.59 * (1-exp(-dRate * lifeExpM[6]))/dRate)
-  yll60.69 <- ifelse(popType=="Older", covidData$deaths60.69 * (1-exp(-dRate * lifeExpU[7]))/dRate, covidData$deaths60.69 * (1-exp(-dRate * lifeExpM[7]))/dRate)
-  yll70.79 <- ifelse(popType=="Older", covidData$deaths70.79 * (1-exp(-dRate * lifeExpU[8]))/dRate, covidData$deaths70.79 * (1-exp(-dRate * lifeExpM[8]))/dRate)
-  yll80.   <- ifelse(popType=="Older", covidData$deaths80.   * (1-exp(-dRate * lifeExpU[9]))/dRate, covidData$deaths80.   * (1-exp(-dRate * lifeExpM[9]))/dRate)
+  yll0.9   <- ifelse(popType=="Older", df$deaths0.9   * (1-exp(-dRate * lifeExpU[1]))/dRate, df$deaths0.9   * (1-exp(-dRate * lifeExpM[1]))/dRate)
+  yll10.19 <- ifelse(popType=="Older", df$deaths10.19 * (1-exp(-dRate * lifeExpU[2]))/dRate, df$deaths10.19 * (1-exp(-dRate * lifeExpM[2]))/dRate)
+  yll20.29 <- ifelse(popType=="Older", df$deaths20.29 * (1-exp(-dRate * lifeExpU[3]))/dRate, df$deaths20.29 * (1-exp(-dRate * lifeExpM[3]))/dRate)
+  yll30.39 <- ifelse(popType=="Older", df$deaths30.39 * (1-exp(-dRate * lifeExpU[4]))/dRate, df$deaths30.39 * (1-exp(-dRate * lifeExpM[4]))/dRate)
+  yll40.49 <- ifelse(popType=="Older", df$deaths40.49 * (1-exp(-dRate * lifeExpU[5]))/dRate, df$deaths40.49 * (1-exp(-dRate * lifeExpM[5]))/dRate)
+  yll50.59 <- ifelse(popType=="Older", df$deaths50.59 * (1-exp(-dRate * lifeExpU[6]))/dRate, df$deaths50.59 * (1-exp(-dRate * lifeExpM[6]))/dRate)
+  yll60.69 <- ifelse(popType=="Older", df$deaths60.69 * (1-exp(-dRate * lifeExpU[7]))/dRate, df$deaths60.69 * (1-exp(-dRate * lifeExpM[7]))/dRate)
+  yll70.79 <- ifelse(popType=="Older", df$deaths70.79 * (1-exp(-dRate * lifeExpU[8]))/dRate, df$deaths70.79 * (1-exp(-dRate * lifeExpM[8]))/dRate)
+  yll80.   <- ifelse(popType=="Older", df$deaths80.   * (1-exp(-dRate * lifeExpU[9]))/dRate, df$deaths80.   * (1-exp(-dRate * lifeExpM[9]))/dRate)
   yll      <- yll0.9 + yll10.19 + yll20.29 + yll30.39 + yll40.49 + yll50.59 + yll60.69 + yll70.79 + yll80.
   
   # Calculate YLDs by COVID categories and total YLDs
@@ -317,22 +339,42 @@ ggplot(covidData_PSA) +
 
 
 # Cost-effectiveness acceptability curve
-wtpLevels    <- 1001                                        
-ceacCols     <- c("wtpLevels", "Boost", "noBoost")
-ceacData     <- matrix(NA, nrow = wtpLevels, ncol = length(ceacCols)) 
-colnames(ceacData)     <- ceacCols
-ceacData[,1] <- seq(0, 25000, length.out = 1001)
+# wtpLevels    <- 1001                                        
+# ceacCols     <- c("wtpLevels", "Boost", "noBoost")
+# ceacData     <- matrix(NA, nrow = wtpLevels, ncol = length(ceacCols)) 
+# colnames(ceacData)     <- ceacCols
+# ceacData[,1] <- seq(0, 25000, length.out = 1001)
+# 
+# 
+# for (i in 1:length(ceacData[,1])){
+#   covidData_PSA$nmb     <- ceacData[i,1] * covidData_PSA$iDaly - covidData_PSA$iCost
+#   covidData_PSA$Boost   <- ifelse(covidData_PSA$nmb >  0, 1, 0)
+#   covidData_PSA$noBoost <- ifelse(covidData_PSA$Boost == 1, 0, 1)
+#   ceacData[i,2]         <- mean(covidData_PSA$noBoost)
+#   ceacData[i,3]         <- mean(covidData_PSA$Boost)
+# }
+# 
+# ceacData <- as.data.frame(ceacData)
 
+###CEAC new codes
 
-for (i in 1:length(ceacData[,1])){
-  covidData_PSA$nmb     <- ceacData[i,1] * covidData_PSA$iDaly - covidData_PSA$iCost
-  covidData_PSA$Boost   <- ifelse(covidData_PSA$nmb >  0, 1, 0)
-  covidData_PSA$noBoost <- ifelse(covidData_PSA$Boost == 1, 0, 1)
-  ceacData[i,2]         <- mean(covidData_PSA$noBoost)
-  ceacData[i,3]         <- mean(covidData_PSA$Boost)
+wtpLevels <- seq(0, 25000, by = 100) # Define WTP levels
+
+ceacData <- data.frame(
+  WTP = wtpLevels,
+  Boost = rep(0, length(wtpLevels)),
+  noBoost = rep(0, length(wtpLevels))  # Create ceacData dataframe
+) 
+
+# iterate through each WTP level to compute the probabilities
+for(i in 1:length(wtpLevels)){
+  covidData_PSA$nmb <- wtpLevels[i] * covidData_PSA$iDaly - covidData_PSA$iCost # Compute NMB for all PSA samples
+  covidData_PSA$Boost <- ifelse(covidData_PSA$nmb > 0, 1, 0) # Derive binary values based on NMB for "Boost"
+  covidData_PSA$noBoost <- ifelse(covidData_PSA$Boost == 1, 0, 1) # Derive binary values based on NMB for "noBoost"
+  ceacData$Boost[i] <- mean(covidData_PSA$Boost)   # Compute the probabilities for "Boost" 
+  ceacData$noBoost[i] <- mean(covidData_PSA$noBoost)  # Compute the probabilities for "noBoost"
 }
 
-ceacData <- as.data.frame(ceacData)
 
 ggplot(ceacData) +
   geom_line(aes(wtpLevels, Boost),   linewidth=0.5, color ="deepskyblue4", linetype = "solid") +
@@ -346,4 +388,5 @@ ggplot(ceacData) +
         axis.ticks.length = unit(0.2, "cm"),
         panel.grid.major  = element_line(size = 0.25, colour = "gray99")) +
   theme_bw()
+
 
