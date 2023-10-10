@@ -217,10 +217,10 @@ ggsave(height=5, width=6, dpi=600, file="plots/figure_7c.pdf")
 
 
 # Fig F5a
-df <- covidData_Base %>% filter(popType=="Younger" & (tpLevel=="low TP" | tpLevel=="high TP") & (vaxCoverage=="20.0%") & 
+df <- covidData_Base %>% filter(popType=="Younger" & (tpLevel=="low TP") & (vaxCoverage=="20.0%") & 
                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"| scenario=="Random vax"| scenario=="Pediatric vax"))
 df <- df %>% mutate(popTP = paste0(scenario, sep = ", ", tpLevel))
-df$popTP <- factor(df$popTP,levels=c("Pediatric vax, low TP","High-risk boost, low TP","Random vax, low TP","Pediatric vax, high TP","High-risk boost, high TP","Random vax, high TP"))
+df$popTP <- factor(df$popTP,levels=c("Pediatric vax, low TP","High-risk boost, low TP","Random vax, low TP"))
 df$popTP
 #ggtitle <- "Scenario: younger population, 20% initial vaccination coverage \n high and low TP, immune escape 2.0 yr"
 figure_F5a <- ggplot(df, aes(x=iDaly, y=iCost, shape=popTP, color=popTP)) +
@@ -233,11 +233,11 @@ figure_F5a <- ggplot(df, aes(x=iDaly, y=iCost, shape=popTP, color=popTP)) +
 
 # Fig F5b
 df <- covidData_Base %>% filter(popType=="Younger" & 
-                                  (tpLevel=="low TP" | tpLevel=="high TP") &
+                                  (tpLevel=="low TP") &
                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"| scenario=="Random vax"| scenario=="Pediatric vax") &
                                   (vaxCoverage=="50.0%"))
 df <- df %>% mutate(popTP = paste0(scenario, sep = ", ", tpLevel))
-df$popTP <- factor(df$popTP,levels=c("Pediatric vax, low TP","High-risk boost, low TP","Random vax, low TP","Pediatric vax, high TP","High-risk boost, high TP","Random vax, high TP"))
+df$popTP <- factor(df$popTP,levels=c("Pediatric vax, low TP","High-risk boost, low TP","Random vax, low TP"))
 #ggtitle <- "Scenario: younger population, 50% initial vaccination coverage \n high and low TP, immune escape 2.0 yr"
 figure_F5b <- ggplot(df, aes(x=iDaly, y=iCost, shape=popTP, color=popTP)) +
   geom_point(size=2.5) + labs(shape = "", color = "") +
