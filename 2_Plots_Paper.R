@@ -284,8 +284,15 @@ ggsave(height=5, width=8, dpi=600, file="plots/figure_F7c.pdf")
 cetLowerA  <- annotate("text", y = 1500000, x = 120, size=4, label = "CET = $19,000", family = "DejaVu Sans")
 cetHigherA <- annotate("text", y = 1400000, x =  0, size=4, label = "CET = $30,000", family = "DejaVu Sans")
 
-cetLowerB  <- annotate("text", y = 700000, x = 375, size=4, label = "CET = $200",    family = "DejaVu Sans")
-cetHigherB <- annotate("text", y = 120000, x = 375, size=4, label = "CET = $1,600",  family = "DejaVu Sans")
+# cetLowerB  <- annotate("text", y = 700000, x = 375, size=4, label = "CET = $200",    family = "DejaVu Sans")
+# cetHigherB <- annotate("text", y = 120000, x = 375, size=4, label = "CET = $1,600",  family = "DejaVu Sans")
+
+cetLowerB  <- annotate("text", y = 700000, x = 375, size=4, label ="CET = $1,600",    family = "DejaVu Sans")
+cetHigherB <- annotate("text", y = 120000, x = 375, size=4, label =  "CET = $200",  family = "DejaVu Sans")
+
+# cetLowerB  <- annotate("text", y = 100000, x = 375, size=4, label = "CET = $200",    family = "DejaVu Sans")
+# cetHigherB <- annotate("text", y = 650000, x = 375, size=4, label = "CET = $1,600",  family = "DejaVu Sans")
+
 
 yscale     <- scale_y_continuous(breaks = seq(-600000, 1500000, 300000), 
                                  limits = c(-600000, 1500000), 
