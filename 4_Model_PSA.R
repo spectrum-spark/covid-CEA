@@ -87,7 +87,8 @@ write_csv(covidData, "data/covidData_All.csv")
 
 covidData <- read_csv("data/covidData_All.csv")
 
-##Take average of every 5 rows
+### Take average of every 5 rows ########################################################################################
+
 # install.packages("data.table")
 library(data.table)
 dt <- as.data.table(covidData) # Convert the data frame to a data.table
@@ -102,8 +103,10 @@ rm(df_final, final_dt, first_dt, dt, avg_dt)
 
 write_csv(covidData_ave, "data/covidData_All_ave.csv")
 
-covidData_ave <- read_csv("data/covidData_All_ave.csv")
 ##
+
+
+### Select Epi scenarios for PSA ########################################################################################
 
 # ### Select Epi scenarios for PSA ("All" Epi output methods)
 # df <- covidData  %>%
@@ -112,6 +115,8 @@ covidData_ave <- read_csv("data/covidData_All_ave.csv")
 #            (scenario=="No further boosting" | scenario=="High-risk boosting"))
 
 ### Select Epi scenarios for PSA (Average" Epi output methods)
+covidData_ave <- read_csv("data/covidData_All_ave.csv")
+
 df  <- covidData_ave  %>%
   filter(population.type=="Older" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
            (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
@@ -318,25 +323,96 @@ print(c("iCost", round(icostPSA,0)))
 print(c("iDaly", round(idalyPSA,0)))
 print(c("icer", round(icerPSA,0)))
 
-# Cost-effectiveness plane
+### Cost-effectiveness plane ########################################################################################
+cetWoodsA <- c(low=19000, high=30000, pr=36000)
+cetWoodsB <- c(low=200,  high=1600, pr=1800)
+cetWoodsC <- c(low=100,  high=1000)
+
+cetLowerA  <- annotate("text", y = 148000, x = 550, size=4, label = "CET = $19,000")
+cetHigherA <- annotate("text", y = 500000, x =  400,  size=4, label = "CET = $30,000")
+cetPrA <- annotate("text", y =680000, x = 280, size=4, label = "CET = $3,6000")
+
+cetLowerB  <- annotate("text", y = 150000, x = 550, size=4, label = "CET = $200")
+cetHigherB <- annotate("text", y = 650000, x = 520, size=4, label = "CET = $1,600")
+cetPrB <- annotate("text", y =700000, x = 270, size=4, label = "CET = $1,800")
+
+cetLowerC  <- annotate("text", y = 100000, x = 375, size=4, label = "CET = $100")
+cetHigherC <- annotate("text", y = 650000, x = 375, size=4, label = "CET = $1,000")
+
+units <- function(n) {
+  labels <- ifelse(n < -1e9, paste0(round(n/1e6), 'M'),  # less than thousands
+                   ifelse(n < 1e6, paste0(round(n/1e3), 'k'),  # in thousands
+                          paste0(round(n/1e6, 1), 'M')  # in millions
+                   ))
+  return(labels)
+}
+
+### CE plane for older pop ########################################################################################
 ggplot(covidData_PSA) +
-  geom_point(aes(x=iDaly,       y=iCost),       shape=21, size=2.5, 
+  geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
              stroke=0.5, fill="#FFFFFFEE", color="deepskyblue4") +
   geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
   geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
   theme_bw() +
-  xlab("DALYs averted") + ylab("Incremental costs") +
-  scale_y_continuous(breaks=seq(-4000000, 4000000, 1000000), limits = c(-4000000, 4000000)) +
+  xlab("DALYs averted per 100,000 pop") + 
+  ylab("Incremental costs ($) per 100,000 pop") +
+  scale_y_continuous(breaks=seq(-450000, 750000, 150000), 
+                     limits = c(-450000, 750000), 
+                     labels=units) +
   scale_x_continuous(breaks=seq(-600, 600, 200),  limits = c(-600,  600)) +
-  theme(axis.title        = element_text(size = 14), 
+  theme(axis.title        = element_text(size = 14),
         axis.text         = element_text(size = 10,  color = "deepskyblue4"),
         axis.line         = element_line(linewidth = 0,   color = "white"),
         axis.ticks        = element_line(linewidth = 0.2, color = "black"),
         axis.ticks.length = unit(0.2, "cm"),
-        panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97"))
+        panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97")) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA+ cetPrA
+
+### CE plane for younger pop ########################################################################################
+ggplot(covidData_PSA) +
+  geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
+             stroke=0.5, fill="#FFFFFFEE", color="deepskyblue4") +
+  geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  theme_bw() +
+  xlab("DALYs averted per 100,000 pop") + 
+  ylab("Incremental costs ($) per 100,000 pop") +
+  scale_y_continuous(breaks=seq(-450000, 750000, 150000), 
+                     limits = c(-450000, 750000), 
+                     labels=units) +
+  scale_x_continuous(breaks=seq(-600, 600, 200),  limits = c(-600,  600)) +
+  theme(axis.title        = element_text(size = 14),
+        axis.text         = element_text(size = 10,  color = "deepskyblue4"),
+        axis.line         = element_line(linewidth = 0,   color = "white"),
+        axis.ticks        = element_line(linewidth = 0.2, color = "black"),
+        axis.ticks.length = unit(0.2, "cm"),
+        panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97")) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB+ cetPrB
 
 
+# #20% dots
+# set.seed(123)
+# sampled_PSA <- covidData_PSA %>% sample_frac(0.2)
+# ggplot(sampled_PSA) +
+#   geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
+#              stroke=0.5, fill="#FFFFFFEE", color="deepskyblue4") +
+#   geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+#   geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+#   theme_bw() +
+#   xlab("DALYs averted per 100,000 pop") + 
+#   ylab("Incremental costs ($) per 100,000 pop") +
+#   scale_y_continuous(breaks=seq(-450000, 750000, 150000), 
+#                      limits = c(-450000, 750000), 
+#                      labels=units) +
+#   scale_x_continuous(breaks=seq(-600, 600, 200),  limits = c(-600,  600)) +
+#   theme(axis.title        = element_text(size = 14),
+#         axis.text         = element_text(size = 10,  color = "deepskyblue4"),
+#         axis.line         = element_line(linewidth = 0,   color = "white"),
+#         axis.ticks        = element_line(linewidth = 0.2, color = "black"),
+#         axis.ticks.length = unit(0.2, "cm"),
+#         panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97"))
 
+### Cost-effectiveness acceptability curve ########################################################################################
 
 # Cost-effectiveness acceptability curve
 # wtpLevels    <- 1001                                        
@@ -357,8 +433,7 @@ ggplot(covidData_PSA) +
 # ceacData <- as.data.frame(ceacData)
 
 ###CEAC new codes
-
-wtpLevels <- seq(0, 25000, by = 100) # Define WTP levels
+wtpLevels <- seq(0, 40000, by = 100) # Define WTP levels
 
 ceacData <- data.frame(
   WTP = wtpLevels,
@@ -375,18 +450,51 @@ for(i in 1:length(wtpLevels)){
   ceacData$noBoost[i] <- mean(covidData_PSA$noBoost)  # Compute the probabilities for "noBoost"
 }
 
+### CEAC Plots for Older pop ########################################################################################
+cetWoodsA <- c(low=19000, high=30000, pr=36000)
+cetLowerA  <- annotate("text", y = 0.25, x = 19000, size=4, label = "CET = $19,000")
+cetHigherA <- annotate("text", y = 0.5, x =  30000,  size=4, label = "CET = $30,000")
+cetPrA <- annotate("text", y = 0.75, x =  36000,  size=4, label = "CET = $36,000")
+
 
 ggplot(ceacData) +
   geom_line(aes(wtpLevels, Boost),   linewidth=0.5, color ="deepskyblue4", linetype = "solid") +
   xlab("Cost-effectiveness threshold") + ylab("Probability cost-effective") +
   scale_y_continuous(breaks = seq(0, 1,    0.25), limits = c(0, 1)) +
-  scale_x_continuous(breaks = seq(0, 25000, 5000),   limits = c(0, 25000)) +
+  scale_x_continuous(breaks = seq(0, 40000, 5000),   limits = c(0, 40000)) +
   theme(axis.title        = element_text(size = 14), 
         axis.text         = element_text(size = 10,  color = "deepskyblue4"),
         axis.line         = element_line(linewidth = 0, color = "black"),
         axis.ticks        = element_line(size = 0.2, color = "black"),
         axis.ticks.length = unit(0.2, "cm"),
         panel.grid.major  = element_line(size = 0.25, colour = "gray99")) +
+  geom_vline(aes(xintercept=cetWoodsA[1]), linetype="dashed", color="red") +
+  geom_vline(aes(xintercept=cetWoodsA[2]), linetype="dashed", color="red") +
+  geom_vline(aes(xintercept=cetWoodsA[3]), linetype="dashed", color="red") +
+  cetLowerA + cetHigherA + cetPrA
   theme_bw()
-
+  
+  
+### CEAC Plots for Younger pop ########################################################################################
+cetWoodsB <- c(low=200,  high=1600, pr=1800)
+cetLowerB  <- annotate("text", y = 0.25, x = 200, size=4, label = "CET = $200")
+cetHigherB <- annotate("text", y = 0.5, x = 1400, size=4, label = "CET = $1,600")
+cetPrB <- annotate("text", y =0.75, x = 2000, size=4, label = "CET = $1,800")
+  
+ggplot(ceacData) +
+  geom_line(aes(wtpLevels, Boost),   linewidth=0.5, color ="deepskyblue4", linetype = "solid") +
+  xlab("Cost-effectiveness threshold") + ylab("Probability cost-effective") +
+  scale_y_continuous(breaks = seq(0, 1,    0.25), limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(0, 4000, 500),   limits = c(0, 4000)) +
+  theme(axis.title        = element_text(size = 14), 
+        axis.text         = element_text(size = 10,  color = "deepskyblue4"),
+        axis.line         = element_line(linewidth = 0, color = "black"),
+        axis.ticks        = element_line(size = 0.2, color = "black"),
+        axis.ticks.length = unit(0.2, "cm"),
+        panel.grid.major  = element_line(size = 0.25, colour = "gray99")) +
+  geom_vline(aes(xintercept=cetWoodsB[1]), linetype="dashed", color="red") +
+  geom_vline(aes(xintercept=cetWoodsB[2]), linetype="dashed", color="red") +
+  geom_vline(aes(xintercept=cetWoodsB[3]), linetype="dashed", color="red") +
+  cetLowerB + cetHigherB + cetPrB
+theme_bw() 
 
