@@ -164,6 +164,13 @@ model <- function(input){
                         ifelse(group=="B", nVaxDoses * (input$cVaxGroupB+input$cDeliveryB) * (1+input$pVaxWaste),
                                ifelse(group=="C", nVaxDoses * (input$cVaxGroupC+input$cDeliveryC) * (1+input$pVaxWaste),
                                       NA)))
+ 
+  # Scenario analysis ($0 vaccine dose)
+  costDoses0   <-  ifelse(group=="A", nVaxDoses * (input$cDeliveryA) * (1+input$pVaxWaste),
+                          ifelse(group=="B", nVaxDoses * (input$cDeliveryB) * (1+input$pVaxWaste),
+                                 ifelse(group=="C", nVaxDoses * (input$cDeliveryC) * (1+input$pVaxWaste),
+                                        NA)))
+
   
   costDeath   <- nDeaths * input$cBodyBag
   
@@ -171,15 +178,22 @@ model <- function(input){
   
   cost        <- costDisease + costDoses 
   
+  costDonated        <- costDisease + costDoses0
+  
+  # Scenario analysis (no home-based visits)
+  costnoHome        <- costDisease + costDoses - costHome
+  
   # This is what the function will return
   dfTemp <- data.frame(group, popType, scenario, vaxCoverage, tpLevel, boostStart, immuneEscape, ageScenario, 
                        nVaxDoses, nAsymptom, nHomecare, nAdmitWard, nAdmitICU, nOccupyWard, nOccupyICU, nDeaths,
-                       costHome, costWard, costICU, costDeath, costDoses, costDisease, cost,
+                       costHome, costWard, costICU, costDeath, costDoses, costDoses0, costDonated, costDisease, costnoHome, cost,
                        yldAsymptom, yldHomecare, yldAdmitWard, yldAdmitICU, yll, yllU, yld, daly, dalyU)
   
   dfTemp <- dfTemp %>% 
     group_by(group, vaxCoverage, tpLevel, immuneEscape, ageScenario) %>% 
-    mutate(daly0 = daly[1], cost0 = cost[1], iDaly = daly0 - daly, iCost = cost - cost0, icer = iCost/iDaly) %>% 
+    mutate(daly0 = daly[1], cost0 = cost[1], iDaly = daly0 - daly, iCost = cost - cost0, icer = iCost/iDaly, 
+           iCostDonated = costDonated - cost0, icerDonated = iCostDonated/iDaly,
+           costnoHome0 = costnoHome[1] , iCostnoHome = costnoHome - costnoHome0, icernoHome = iCostnoHome/iDaly) %>% 
     unite(scenarioBoostStart, scenario, boostStart, sep = " at ", remove = FALSE) %>% 
     unite(scenarioImmuneEscape, scenario, immuneEscape, sep = ", immune esc ", remove = FALSE) %>% 
     unite(scenarioVaxCoverage, scenario, vaxCoverage, sep = ", coverage ", remove = FALSE) 
@@ -196,7 +210,6 @@ covidData_Base <- model(inputBase)
 write_csv(covidData_Base, "data/covidData_Base.csv")
 
 
-
 ### Conduct deterministic sensitivity analysis
 parameters <- c("dModerate", "dSevere", "dCritical", "dPostacute", "nModerate", "nSevere", "nCritical", 
                 "nPostacute",  "cHomeGroupA", "cWardGroupA", "cICUGroupA", "cDeliveryA", "cVaxGroupA", 
@@ -205,7 +218,7 @@ parameters <- c("dModerate", "dSevere", "dCritical", "dPostacute", "nModerate", 
 
 observations   <- length(covidData$scenario)
 covidData_OWSA <- NULL
-variables      <- c("group", "scenario", "vaxCoverage", "tpLevel", "boostStart", "immuneEscape", "icer")
+variables      <- c("group", "scenario", "vaxCoverage", "tpLevel", "boostStart", "immuneEscape", "icer", "icerDonated")
 
 for (i in 1:length(parameters)){
   param    <- parameters[i]
@@ -265,6 +278,39 @@ test  <- covidData_Base  %>%
   filter(popType=="Older" & immuneEscape=="1.50 yr" & tpLevel=="low TP" & 
            (boostStart=="Never" | boostStart=="1.75 yr") & 
            (scenario=="No further boost" | scenario=="High-risk boost"))
+
+
+
+### Test CE consistency across different scenarios
+# testCE <- covidData_Base %>%
+#   mutate(
+#     NHB = case_when(
+#       group == "A" ~ 30000 * iDaly - iCost,
+#       group == "B" ~ 1600 * iDaly - iCost,
+#       group == "C" ~ 1000 * iDaly - iCost,
+#       TRUE ~ NA_real_ 
+#     ),
+#     NHBdonated = case_when(
+#       group == "A" ~ 30000 * iDaly - iCostDonated,
+#       group == "B" ~ 1600 * iDaly - iCostDonated,
+#       group == "C" ~ 1000 * iDaly - iCostDonated,
+#       TRUE ~ NA_real_  
+#     ),
+#     NHBnohome = case_when(
+#       group == "A" ~ 30000 * iDaly - iCostnoHome,
+#       group == "B" ~ 1600 * iDaly - iCostnoHome,
+#       group == "C" ~ 1000 * iDaly - iCostnoHome,
+#       TRUE ~ NA_real_  
+#     )
+#   ) %>%
+#   mutate(
+#     CE_all_consis = ifelse((NHB > 0 & NHBdonated > 0 & NHBnohome > 0) | (NHB < 0 & NHBdonated < 0 & NHBnohome < 0) | (NHB == 0 & NHBdonated == 0 & NHBnohome == 0),
+#                        "yes", "no"),
+#     CE_donated_consis = ifelse((NHB > 0 & NHBdonated > 0) | (NHB < 0 & NHBdonated < 0) | (NHB == 0 & NHBdonated == 0),
+#                            "yes", "no"),
+#     CE_nohome_consis = ifelse((NHB > 0 & NHBnohome > 0) | (NHB < 0 & NHBnohome < 0) | (NHB == 0 & NHBnohome == 0),
+#                            "yes", "no"),
+#   )
 
 
 
