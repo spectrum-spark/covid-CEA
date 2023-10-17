@@ -420,3 +420,42 @@ ggsave(height=6, width=8, dpi=600, file="plots/figure_F2b.pdf")
 plot_grid(figure_F2a, figure_F2b, rows = 2)
 ggsave(height=10, width=8, dpi=600, file="plots/figure_F2.pdf")
 
+
+
+# Figure home cost = 0
+df <- covidData_Base %>% filter(group == "B" &  (scenario=="High-risk boost") &
+                                  (boostStart == "2.00 yr") & (vaxCoverage=="80%") & (tpLevel == "high TP") &
+                                  (immuneEscape=="1.50 yr" | immuneEscape=="1.75 yr"| immuneEscape=="2.00 yr"| immuneEscape=="2.25 yr")) 
+
+
+#ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, boosting starts 2.0 yr"
+df$scenarioImmuneEscape<- factor(df$scenarioImmuneEscape,levels = c("High-risk boost, immune esc 1.50 yr","High-risk boost, immune esc 1.75 yr", "High-risk boost, immune esc 2.00 yr","High-risk boost, immune esc 2.25 yr"))
+
+fighome1 <- ggplot(df, aes(x=iDaly, y=iCostnoHome, shape=scenarioImmuneEscape, color=scenarioImmuneEscape)) + 
+  geom_point(size=2.5) + labs(shape = "", color = "") +
+  scale_shape_manual(values=c("circle", "square","triangle", "diamond"),name="younger population (high TP)") +
+  scale_color_manual(values=c("#87cefa", "#000080","#1e90ff", "#9370db") ,name="younger population (high TP)") +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + #ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB+
+  theme(text=element_text(family="DejaVu Sans")) + theme(legend.position = c(1.05, 0.0))
+#
+df <- covidData_Base %>% filter(group == "B" &  (scenario=="High-risk boost") &
+                                  (boostStart == "2.00 yr") & (vaxCoverage=="80%") & (tpLevel == "low TP") &
+                                  (immuneEscape=="1.50 yr" | immuneEscape=="1.75 yr"| immuneEscape=="2.00 yr"| immuneEscape=="2.25 yr")) 
+
+
+#ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, boosting starts 2.0 yr"
+df$scenarioImmuneEscape<- factor(df$scenarioImmuneEscape,levels = c("High-risk boost, immune esc 1.50 yr","High-risk boost, immune esc 1.75 yr", "High-risk boost, immune esc 2.00 yr","High-risk boost, immune esc 2.25 yr"))
+
+fighome2 <- ggplot(df, aes(x=iDaly, y=iCostnoHome, shape=scenarioImmuneEscape, color=scenarioImmuneEscape)) + 
+  geom_point(size=2.5) + labs(shape = "", color = "") +
+  scale_shape_manual(values=c("circle open", "square open","triangle open", "diamond open"),name="younger population (low TP)") +
+  scale_color_manual(values=c("#87cefa", "#000080","#1e90ff", "#9370db") ,name="younger population (low TP)") +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + #ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB+
+  theme(text=element_text(family="DejaVu Sans")) + theme(legend.position = c(1.05, 0.0))
+
+plot_grid(fighome1, fighome2, labels = c("(a)","(b)"),label_x=0.12,label_y = 0.98)
+
+ggsave(height=5, width=12, dpi=600, file="plots/figure_home0.pdf")
+
