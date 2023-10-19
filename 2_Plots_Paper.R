@@ -120,8 +120,8 @@ cetHigherB_CEAC <- annotate("text", y = 0.25, x = 1600, size=4, label = "CET = $
 df <- read_csv("data/ceac_old.csv")
 df <- df %>%
   mutate(strategy = case_when(
-    strategy == "High-risk boosting, older population, immune escape starts 2.5yr, boosting at 2.0yr" ~ "High-risk boosting, immune esc 2.50 yr",
-    strategy == "Paediatric boosting, older population, immune escape starts 2.5yr, boosting at 2.0yr" ~ "Pediatric boosting, immune esc 2.50 yr",
+    strategy == "High-risk boosting, older population, immune escape starts 1.5yr, boosting at 2.0yr" ~ "High-risk boosting, immune esc 1.50 yr",
+    strategy == "Paediatric boosting, older population, immune escape starts 1.5yr, boosting at 2.0yr" ~ "Pediatric boosting, immune esc 1.50 yr",
     TRUE ~ strategy
   ))
 
@@ -140,15 +140,15 @@ figceac1 <- ggplot(df) +
   geom_vline(aes(xintercept=cetWoodsA_CEAC[1]), linetype="dashed", color="black") +
   geom_vline(aes(xintercept=cetWoodsA_CEAC[2]), linetype="dashed", color="black") +
   cetLowerA_CEAC + cetHigherA_CEAC +
-  theme(legend.position = c(0.5, 0.75),
+  theme(legend.position = c(0.5, 0.6),
         legend.key.size = unit(0.5, 'cm'),
         legend.text = element_text(size=12, family = "DejaVu Sans"),
         legend.title = element_text(size=12),
         legend.background = element_rect(fill=alpha("white",0.9)))+
-  scale_color_manual(values = c("High-risk boosting, immune esc 2.50 yr" = "#ff0000",   
-                                "Pediatric boosting, immune esc 2.50 yr" = "#fa8072")) +  # "#000080"
-  scale_linetype_manual(values = c("High-risk boosting, immune esc 2.50 yr" = "solid", 
-                                   "Pediatric boosting, immune esc 2.50 yr" = "twodash"))+
+  scale_color_manual(values = c("High-risk boosting, immune esc 1.50 yr" = "#ff0000",   
+                                "Pediatric boosting, immune esc 1.50 yr" = "#fa8072")) +  # "#000080"
+  scale_linetype_manual(values = c("High-risk boosting, immune esc 1.50 yr" = "solid", 
+                                   "Pediatric boosting, immune esc 1.50 yr" = "twodash"))+
   border
 
 
@@ -178,7 +178,7 @@ figceac2 <- ggplot(df,aes(WTP, Boost, group=strategy)) +
   geom_vline(aes(xintercept=cetWoodsB_CEAC[1]), linetype="dashed", color="black") +
   geom_vline(aes(xintercept=cetWoodsB_CEAC[2]), linetype="dashed", color="black") +
   cetLowerB_CEAC + cetHigherB_CEAC +
-  theme(legend.position = c(0.6, 0.5),
+  theme(legend.position = c(0.6, 0.6),
         legend.key.size = unit(0.5, 'cm'),
         legend.text = element_text(size=12, family = "DejaVu Sans"),
         legend.title = element_text(size=12),
@@ -186,12 +186,11 @@ figceac2 <- ggplot(df,aes(WTP, Boost, group=strategy)) +
   scale_color_manual(values = c("High-risk boosting, immune esc 1.50 yr" = "#1e90ff", 
                                 "Pediatric boosting, immune esc 1.50 yr" = "#87cefa"))+ #  "#9370db"
   scale_linetype_manual(values = c("High-risk boosting, immune esc 1.50 yr" = "solid", 
-                                "Pediatric boosting, immune esc 1.50 yr" = "twodash"))+
+                                   "Pediatric boosting, immune esc 1.50 yr" = "twodash"))+
   border
 
 
 plot_grid(figure3a, figure3b,figceac1, figceac2, labels = c("(a)","(b)", "(c)","(d)"),label_x=0.12,label_y = 0.98, ncol=2)
-
 
 ggsave(height=10, width=12, dpi=600, file="plots/figure_3.pdf")
 
@@ -469,4 +468,3 @@ figure_E7b <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) 
 
 plot_grid(figure_E7a, figure_E7b, rows=2,labels = c("(a)","(b)"),label_x=0.12,label_y = 0.98)
 ggsave(height=10, width=8, dpi=600, file="plots/figure_E7.pdf")
-
