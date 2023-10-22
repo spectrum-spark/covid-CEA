@@ -81,7 +81,7 @@ df$scenarioImmuneEscape<- factor(df$scenarioImmuneEscape,levels = c("Pediatric b
 figure3a <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioImmuneEscape, color=scenarioImmuneEscape)) +
   geom_point(size=2.5) + labs(shape = "", color = "") +
   scale_shape_manual(values=c("circle", "circle open", "square", "square open", "triangle", "triangle open"),name="older population") +
-  scale_color_manual(values=c("#ff0000","#ff0000", "#fa8072", "#fa8072", "#b22222", "#b22222"),name="older population") +
+  scale_color_manual(values=c("#fa8072", "#fa8072","#ff0000","#ff0000",  "#b22222", "#b22222"),name="older population") +
   xlab + ylab + xscale + yscale + hline + vline + border + theme+ theme(legend.position = c(1.05, 0.60)) + #ggtitle(ggtitle) +
   geom_abline(intercept = 0, slope = cetWoodsA,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA+
   theme(text=element_text(family="DejaVu Sans"))
@@ -98,7 +98,7 @@ df$scenarioImmuneEscape<- factor(df$scenarioImmuneEscape,levels = c("Pediatric b
 figure3b<- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioImmuneEscape, color=scenarioImmuneEscape)) + 
   geom_point(size=2.5) + labs(shape = "", color = "") +
   scale_shape_manual(values=c("circle", "circle open", "square", "square open","triangle", "triangle open"),name="younger population") +
-  scale_color_manual(values=c("#1e90ff", "#1e90ff", "#87cefa","#87cefa",  "#000080", "#000080"),name="younger population") +
+  scale_color_manual(values=c("#87cefa","#87cefa","#1e90ff", "#1e90ff",   "#000080", "#000080"),name="younger population") +
   xlab + ylab + xscale + yscale + hline + vline + border + theme + #ggtitle(ggtitle) +
   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB+
   theme(text=element_text(family="DejaVu Sans")) + theme(legend.position = c(1.05, 0.0))
