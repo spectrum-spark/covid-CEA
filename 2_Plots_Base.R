@@ -459,3 +459,194 @@ plot_grid(fighome1, fighome2, labels = c("(a)","(b)"),label_x=0.12,label_y = 0.9
 
 ggsave(height=5, width=12, dpi=600, file="plots/figure_home0.pdf")
 
+
+#################################################################################
+#################################################################################
+
+## New ggplot2 theme specifications for all figures below
+cetLowerA  <- annotate("text", y = 1500000, x = 120, size=4, label = "CET = $19,000", family = "DejaVu Sans")
+cetHigherA <- annotate("text", y = 1400000, x =  0, size=4, label = "CET = $30,000", family = "DejaVu Sans")
+
+# cetLowerB  <- annotate("text", y = 700000, x = 375, size=4, label = "CET = $200",    family = "DejaVu Sans")
+# cetHigherB <- annotate("text", y = 120000, x = 375, size=4, label = "CET = $1,600",  family = "DejaVu Sans")
+
+cetLowerB  <- annotate("text", y = 700000, x = 375, size=4, label ="CET = $1,600",    family = "DejaVu Sans")
+cetHigherB <- annotate("text", y = 120000, x = 375, size=4, label =  "CET = $200",  family = "DejaVu Sans")
+
+# cetLowerB  <- annotate("text", y = 100000, x = 375, size=4, label = "CET = $200",    family = "DejaVu Sans")
+# cetHigherB <- annotate("text", y = 650000, x = 375, size=4, label = "CET = $1,600",  family = "DejaVu Sans")
+
+
+yscale     <- scale_y_continuous(breaks = seq(-600000, 1500000, 300000), 
+                                 limits = c(-600000, 1500000), 
+                                 labels = units)
+
+theme <- theme + theme(legend.key.size = unit(0.45, 'cm'))
+
+### fig compare scenarios #####
+#####80% coverage high-risk boost####
+df <- covidData_Base %>% filter(group == "B" &  (scenario=="High-risk boost") &
+                                  (boostStart == "2.00 yr") & (vaxCoverage=="80%") & (tpLevel == "high TP") &
+                                  (immuneEscape=="1.50 yr"| immuneEscape=="2.50 yr")) 
+df <- df %>%
+  pivot_longer(
+    cols = c(iCostDonated, iCost, iCostnoHome, iCostnoHomeDonated),
+    names_to = "CostType",
+    values_to = "CostValue"
+  )
+
+df <- df %>%
+  mutate(CostType = case_when(
+    CostType == "iCostDonated" ~ "Vaccine donated scenario",
+    CostType == "iCost" ~ "Base scenario",
+    CostType == "iCostnoHome" ~ "No home care cost scenario",
+    CostType == "iCostnoHomeDonated" ~ "Vaccine donated and no home care cost scenario",
+    TRUE ~ CostType
+  ))
+
+df <- df %>%
+  mutate(
+    CostType = case_when(
+      immuneEscape == "1.50 yr" ~ paste(CostType, "1.5 yr"),
+      immuneEscape == "2.50 yr" ~ paste(CostType, "2.5 yr"),
+      TRUE ~ CostType
+    )
+  )
+
+df$CostType<- factor(df$CostType,levels = c("Base scenario 1.5 yr",
+                                            "Vaccine donated scenario 1.5 yr",
+                                            "No home care cost scenario 1.5 yr",
+                                            "Vaccine donated and no home care cost scenario 1.5 yr",
+                                            "Base scenario 2.5 yr",
+                                            "Vaccine donated scenario 2.5 yr",
+                                            "No home care cost scenario 2.5 yr",
+                                            "Vaccine donated and no home care cost scenario 2.5 yr"
+))
+
+###plot
+figscenario1 <- ggplot(df, aes(x=iDaly, y=CostValue, shape=CostType, color=CostType)) + 
+  geom_point(size=2.5) + labs(shape = "", color = "") +
+  scale_shape_manual(values=c("circle", "square","triangle", "diamond", "circle open", "square open","triangle open", "diamond open"),name="younger population high-risk boosting (80% coverage, high TP)") +
+  scale_color_manual(values=c("#87cefa", "#000080","#1e90ff", "#9370db","#87cefa", "#000080","#1e90ff", "#9370db") ,name="younger population high-risk boosting (80% coverage, high TP)") +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + #ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB+
+  theme(text=element_text(family="DejaVu Sans")) + theme(legend.position = c(0.86, 0.6)) +
+  theme(legend.text = element_text(size=12, family = "universCn"),
+        legend.title = element_text(size=12), 
+        legend.key.size = unit(0.5, 'cm')) 
+
+
+figscenario1
+##
+df <- covidData_Base %>% filter(group == "B" &  (scenario=="High-risk boost") &
+                                  (boostStart == "2.00 yr") & (vaxCoverage=="80%") & (tpLevel == "low TP") &
+                                  (immuneEscape=="1.50 yr"| immuneEscape=="2.50 yr")) 
+df <- df %>%
+  pivot_longer(
+    cols = c(iCostDonated, iCost, iCostnoHome, iCostnoHomeDonated),
+    names_to = "CostType",
+    values_to = "CostValue"
+  )
+
+df <- df %>%
+  mutate(CostType = case_when(
+    CostType == "iCostDonated" ~ "Vaccine donated scenario",
+    CostType == "iCost" ~ "Base scenario",
+    CostType == "iCostnoHome" ~ "No home care cost scenario",
+    CostType == "iCostnoHomeDonated" ~ "Vaccine donated and no home care cost scenario",
+    TRUE ~ CostType
+  ))
+
+df <- df %>%
+  mutate(
+    CostType = case_when(
+      immuneEscape == "1.50 yr" ~ paste(CostType, "1.5 yr"),
+      immuneEscape == "2.50 yr" ~ paste(CostType, "2.5 yr"),
+      TRUE ~ CostType
+    )
+  )
+
+df$CostType<- factor(df$CostType,levels = c("Base scenario 1.5 yr",
+                                            "Vaccine donated scenario 1.5 yr",
+                                            "No home care cost scenario 1.5 yr",
+                                            "Vaccine donated and no home care cost scenario 1.5 yr",
+                                            "Base scenario 2.5 yr",
+                                            "Vaccine donated scenario 2.5 yr",
+                                            "No home care cost scenario 2.5 yr",
+                                            "Vaccine donated and no home care cost scenario 2.5 yr"
+))
+
+###plot
+figscenario2 <- ggplot(df, aes(x=iDaly, y=CostValue, shape=CostType, color=CostType)) + 
+  geom_point(size=2.5) + labs(shape = "", color = "") +
+  scale_shape_manual(values=c("circle", "square","triangle", "diamond", "circle open", "square open","triangle open", "diamond open"),name="younger population high-risk boosting (80% coverage, low TP)") +
+  scale_color_manual(values=c("#87cefa", "#000080","#1e90ff", "#9370db","#87cefa", "#000080","#1e90ff", "#9370db") ,name="younger population high-risk boosting (80% coverage, low TP)") +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + #ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB+
+  theme(text=element_text(family="DejaVu Sans")) + theme(legend.position = c(0.85, 0.6)) +
+  theme(legend.text = element_text(size=12, family = "universCn"),
+        legend.title = element_text(size=12), 
+        legend.key.size = unit(0.5, 'cm')) 
+
+figscenario2
+
+plot_grid(figscenario1, figscenario2, labels = c("(a)","(b)"),label_x=0.12,label_y = 0.98, nrow = 2)
+
+ggsave(height=10, width=8, dpi=600, file="plots/figure_scenarioCompare1.pdf")
+
+######20% coverage boost####
+df <- covidData_Base %>% filter(group == "C" & (boostStart == "2.00 yr")& (vaxCoverage=="20.0%") &
+                                  scenario == "High-risk boost")
+
+df <- df %>%
+  pivot_longer(
+    cols = c(iCostDonated, iCost, iCostnoHome, iCostnoHomeDonated),
+    names_to = "CostType",
+    values_to = "CostValue"
+  )
+
+df <- df %>%
+  mutate(CostType = case_when(
+    CostType == "iCostDonated" ~ "Vaccine donated scenario",
+    CostType == "iCost" ~ "Base scenario",
+    CostType == "iCostnoHome" ~ "No home care cost scenario",
+    CostType == "iCostnoHomeDonated" ~ "Vaccine donated and no home care cost scenario",
+    TRUE ~ CostType
+  ))
+
+df <- df %>%
+  mutate(
+    CostType = case_when(
+      tpLevel == "high TP" ~ paste(CostType, "high TP"),
+      tpLevel == "low TP" ~ paste(CostType, "low TP"),
+      TRUE ~ CostType
+    )
+  )
+
+df$CostType<- factor(df$CostType,levels = c("Base scenario high TP",
+                                            "Vaccine donated scenario high TP",
+                                            "No home care cost scenario high TP",
+                                            "Vaccine donated and no home care cost scenario high TP",
+                                            "Base scenario low TP",
+                                            "Vaccine donated scenario low TP",
+                                            "No home care cost scenario low TP",
+                                            "Vaccine donated and no home care cost scenario low TP"
+))
+
+
+figscenario3 <- ggplot(df, aes(x=iDaly, y=CostValue, shape=CostType, color=CostType)) + 
+  geom_point(size=2.5) + labs(shape = "", color = "") +
+  scale_shape_manual(values=c("circle", "square","triangle", "diamond", "circle open", "square open","triangle open", "diamond open"),name="younger population high-risk boosting (20% coverage)") +
+  scale_color_manual(values=c("#87cefa", "#000080","#1e90ff", "#9370db","#87cefa", "#000080","#1e90ff", "#9370db") ,name="younger population high-risk boosting (20% coverage)") +
+  xlab + ylab + xscale + yscale + hline + vline + border + theme + #ggtitle(ggtitle) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB+
+  theme(text=element_text(family="DejaVu Sans")) + theme(legend.position = c(0.73, 0.68)) +
+  theme(legend.text = element_text(size=12, family = "universCn"),
+        legend.title = element_text(size=12), 
+        legend.key.size = unit(0.5, 'cm')) 
+
+
+figscenario3
+
+ggsave(height=6, width=8, dpi=600, file="plots/figure_scenarioCompare2.pdf")
+
