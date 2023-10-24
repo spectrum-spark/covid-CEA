@@ -126,10 +126,10 @@ ceac <- ceac %>%
   ))
 ####CEAC plots####
 df <- ceac %>% filter(population=="older")
-df$strategy<- factor(df$strategy,levels = c("High-risk boosting, immune esc 1.50yr","Paediatric boosting, immune esc 1.50yr","High-risk boosting, immune esc 2.50yr","Paediatric boosting, immune esc 2.50yr"))
+df$strategy<- factor(df$strategy,levels = c("High-risk boosting, immune esc 1.50yr","High-risk boosting, immune esc 2.50yr","Paediatric boosting, immune esc 1.50yr","Paediatric boosting, immune esc 2.50yr"))
 
 figceac1 <- ggplot(df) +
-  geom_line(aes(WTP, Boost, color = strategy,linetype =strategy), linewidth=1.0) +
+  geom_line(aes(WTP, Boost, color = strategy,linetype =strategy), linewidth=1.2) +
   xlab("Cost-effectiveness threshold ($)") + ylab("Cost-effectiveness probability") +
   labs(color = "older population",linetype="older population") +
   scale_y_continuous(breaks = seq(0, 1, 0.25), limits = c(0, 1)) +
@@ -147,19 +147,21 @@ figceac1 <- ggplot(df) +
         legend.key.size = unit(0.5, 'cm'),
         legend.text = element_text(size=12, family = "DejaVu Sans"),
         legend.title = element_text(size=12),
-        legend.background = element_rect(fill=alpha("white",0.9)))+
+        legend.background = element_rect(fill=alpha("white",0.9)),
+        legend.key.width = unit(0.9,"cm")) + 
   scale_color_manual(values = c ("#ff0000","#ff0000", "#fa8072","#fa8072"))+   
-  scale_linetype_manual(values = c("solid","twodash", "solid","twodash"))+
+  #scale_linetype_manual(values = c("solid","longdash", "dotdash","dotted"))+  
+  scale_linetype_manual(values = c("solid","41", "1141","11"))+
   border
 
 #  , boosting at 2.0yr # , boosting at 2.0yr
 
 ##
 df <- ceac %>% filter(population=="younger")
-df$strategy<- factor(df$strategy,levels = c("High-risk boosting, immune esc 1.50yr","Paediatric boosting, immune esc 1.50yr","High-risk boosting, immune esc 2.50yr","Paediatric boosting, immune esc 2.50yr"))
+df$strategy<- factor(df$strategy,levels = c("High-risk boosting, immune esc 1.50yr","High-risk boosting, immune esc 2.50yr","Paediatric boosting, immune esc 1.50yr","Paediatric boosting, immune esc 2.50yr"))
 
 figceac2 <- ggplot(df,aes(WTP, Boost, group=strategy)) +
-  geom_line(aes(linetype=strategy, color=strategy), linewidth=1.0) +
+  geom_line(aes(linetype=strategy, color=strategy), linewidth=1.2) +
   xlab("Cost-effectiveness threshold ($)") + ylab("Cost-effectiveness probability") +
   labs(color = "younger population",linetype="younger population") +
   scale_y_continuous(breaks = seq(0, 1, 0.25), limits = c(0, 1)) +
@@ -177,9 +179,10 @@ figceac2 <- ggplot(df,aes(WTP, Boost, group=strategy)) +
         legend.key.size = unit(0.5, 'cm'),
         legend.text = element_text(size=12, family = "DejaVu Sans"),
         legend.title = element_text(size=12),
-        legend.background = element_rect(fill=alpha("white",0.9))) + 
+        legend.background = element_rect(fill=alpha("white",0.9)),
+        legend.key.width = unit(0.9,"cm")) + 
   scale_color_manual(values = c ("#1e90ff","#1e90ff", "#87cefa","#87cefa"))+   
-  scale_linetype_manual(values = c("solid","twodash", "solid","twodash"))+
+  scale_linetype_manual(values = c("solid","41", "1141","11"))+
   border
 
 
