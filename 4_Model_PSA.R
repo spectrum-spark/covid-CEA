@@ -117,31 +117,70 @@ write_csv(covidData_ave, "data/covidData_All_ave.csv")
 ### Select Epi scenarios for PSA (Average" Epi output methods
 covidData_ave <- read_csv("data/covidData_All_ave.csv")
 
-#most CE
-#1
+#old immuneescape = 1.5yr
+#1 Oler 1.5yr CE
 df  <- covidData_ave  %>%
-  filter(population.type=="Older" & immune.escape.starts=="2.50 yr" & transmission.potential.level=="high TP" & 
+  filter(population.type=="Older" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
            (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
            (scenario=="No further boosting" | scenario=="High-risk boosting"))
 
-#2
+#2 Older 1.5yr Not CE
+df  <- covidData_ave  %>%
+  filter(population.type=="Older" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
+           (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
+           (scenario=="No further boosting" | scenario=="Pediatric boosting"))
+
+
+#3 Younger 1.5 CE
 df  <- covidData_ave  %>%
   filter(population.type=="Younger" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
            (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
            (scenario=="No further boosting" | scenario=="High-risk boosting"))
 
-#most not CE
-#3
+#4 Younger 1.5 Not CE
+df  <- covidData_ave  %>%
+  filter(population.type=="Younger" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
+           (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
+           (scenario=="No further boosting" | scenario=="Pediatric boosting"))
+###
+#old immuneescape = 2.5yr
+#5 Oler 2.5yr CE
+df  <- covidData_ave  %>%
+  filter(population.type=="Older" & immune.escape.starts=="2.50 yr" & transmission.potential.level=="high TP" & 
+           (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
+           (scenario=="No further boosting" | scenario=="High-risk boosting"))
+
+#6 Older 2.5yr Not CE
 df  <- covidData_ave  %>%
   filter(population.type=="Older" & immune.escape.starts=="2.50 yr" & transmission.potential.level=="high TP" & 
            (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
            (scenario=="No further boosting" | scenario=="Pediatric boosting"))
 
-#4
+
+#7 Younger 2.5 CE
 df  <- covidData_ave  %>%
-  filter(population.type=="Younger" & immune.escape.starts=="1.50 yr" & transmission.potential.level=="high TP" & 
+  filter(population.type=="Younger" & immune.escape.starts=="2.50 yr" & transmission.potential.level=="high TP" & 
+           (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
+           (scenario=="No further boosting" | scenario=="High-risk boosting"))
+
+#8 Younger 2.5 Not CE
+df  <- covidData_ave  %>%
+  filter(population.type=="Younger" & immune.escape.starts=="2.50 yr" & transmission.potential.level=="high TP" & 
            (boosting.starts=="Never" | boosting.starts=="2.00 yr") & 
            (scenario=="No further boosting" | scenario=="Pediatric boosting"))
+
+
+
+### low/med coverage for high-risk boosting in younger population
+#med coverage
+df  <- covidData_ave  %>%
+  filter(population.type=="Younger" & immune.escape.starts=="2.00 yr" & transmission.potential.level=="high TP" & 
+           (scenario=="No further vaccination" | scenario=="High-risk boosting") & X1st.year.vaccination.coverage == "50.0%")
+
+#low coverage
+df  <- covidData_ave  %>%
+  filter(population.type=="Younger" & immune.escape.starts=="2.00 yr" & transmission.potential.level=="high TP" & 
+           (scenario=="No further vaccination" | scenario=="High-risk boosting") & X1st.year.vaccination.coverage == "20.0%")
 
 
 ### Calculate Costs and DALYs ########################################################################################
@@ -344,8 +383,8 @@ units <- function(n) {
   return(labels)
 }
 
-### CE plane for older pop ########################################################################################
-#figpsa1/3
+### CE plane for 1.5yr ########################################################################################
+#figpsa1/2 (older)
 figpsa1 <- ggplot(covidData_PSA) +
   geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
              stroke=0.5, fill="#FFFFFFEE", color="#ff0000") +
@@ -367,7 +406,7 @@ figpsa1 <- ggplot(covidData_PSA) +
   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
 #
 
-figpsa3 <- ggplot(covidData_PSA) +
+figpsa2 <- ggplot(covidData_PSA) +
   geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
              stroke=0.5, fill="#FFFFFFEE", color="#ff0000") +
   geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
@@ -387,11 +426,11 @@ figpsa3 <- ggplot(covidData_PSA) +
         panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97")) +
   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
 
-### CE plane for younger pop ########################################################################################
-#figpsa2/4
-figpsa2 <- ggplot(covidData_PSA) +
+### CE plane for younger pop 
+#figpsa3/4 (younger)
+figpsa3 <- ggplot(covidData_PSA) +
   geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
-             stroke=0.5, fill="#FFFFFFEE", color="#87cefa") +
+             stroke=0.5, fill="#FFFFFFEE", color="#1e90ff") +
   geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
   geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
   theme_bw() +
@@ -412,6 +451,97 @@ figpsa2 <- ggplot(covidData_PSA) +
 
 figpsa4 <- ggplot(covidData_PSA) +
   geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
+             stroke=0.5, fill="#FFFFFFEE", color="#1e90ff") +
+  geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  theme_bw() +
+  xlab("DALYs averted per 100,000 pop") + 
+  ylab("Incremental costs ($) per 100,000 pop") +
+  scale_y_continuous(breaks=seq(-450000, 750000, 150000), 
+                     limits = c(-450000, 750000), 
+                     labels=units) +
+  scale_x_continuous(breaks=seq(-600, 600, 200),  limits = c(-600,  600)) +
+  theme(axis.title        = element_text(size = 14),
+        axis.text         = element_text(size = 10,  color = "black"),
+        axis.line         = element_line(linewidth = 0,   color = "white"),
+        axis.ticks        = element_line(linewidth = 0.2, color = "black"),
+        axis.ticks.length = unit(0.2, "cm"),
+        panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97")) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
+
+
+plot_grid(figpsa1,  figpsa3, figpsa2, figpsa4, labels = c("(a)","(b)","(c)","(d)"),label_x=0.12,label_y = 0.98, ncol = 2)
+
+ggsave(height=10, width=12, dpi=600, file="plots/figure_psa1.pdf")
+
+### CE plane for 2.5yr ########################################################################################
+#figpsa5/6 (older)
+figpsa5 <- ggplot(covidData_PSA) +
+  geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
+             stroke=0.5, fill="#FFFFFFEE", color="#fa8072") +
+  geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  theme_bw() +
+  xlab("DALYs averted per 100,000 pop") + 
+  ylab("Incremental costs ($) per 100,000 pop") +
+  scale_y_continuous(breaks=seq(-450000, 750000, 150000), 
+                     limits = c(-450000, 750000), 
+                     labels=units) +
+  scale_x_continuous(breaks=seq(-600, 600, 200),  limits = c(-600,  600)) +
+  theme(axis.title        = element_text(size = 14),
+        axis.text         = element_text(size = 10,  color = "black"),
+        axis.line         = element_line(linewidth = 0,   color = "white"),
+        axis.ticks        = element_line(linewidth = 0.2, color = "black"),
+        axis.ticks.length = unit(0.2, "cm"),
+        panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97")) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
+#
+
+figpsa6 <- ggplot(covidData_PSA) +
+  geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
+             stroke=0.5, fill="#FFFFFFEE", color="#fa8072") +
+  geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  theme_bw() +
+  xlab("DALYs averted per 100,000 pop") + 
+  ylab("Incremental costs ($) per 100,000 pop") +
+  scale_y_continuous(breaks=seq(-450000, 750000, 150000), 
+                     limits = c(-450000, 750000), 
+                     labels=units) +
+  scale_x_continuous(breaks=seq(-600, 600, 200),  limits = c(-600,  600)) +
+  theme(axis.title        = element_text(size = 14),
+        axis.text         = element_text(size = 10,  color = "black"),
+        axis.line         = element_line(linewidth = 0,   color = "white"),
+        axis.ticks        = element_line(linewidth = 0.2, color = "black"),
+        axis.ticks.length = unit(0.2, "cm"),
+        panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97")) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerA + cetHigherA
+
+### CE plane for younger pop 
+#figpsa7/8 (younger)
+figpsa7 <- ggplot(covidData_PSA) +
+  geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
+             stroke=0.5, fill="#FFFFFFEE", color="#87cefa") +
+  geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
+  theme_bw() +
+  xlab("DALYs averted per 100,000 pop") + 
+  ylab("Incremental costs ($) per 100,000 pop") +
+  scale_y_continuous(breaks=seq(-450000, 750000, 150000), 
+                     limits = c(-450000, 750000), 
+                     labels=units) +
+  scale_x_continuous(breaks=seq(-600, 600, 200),  limits = c(-600,  600)) +
+  theme(axis.title        = element_text(size = 14),
+        axis.text         = element_text(size = 10,  color = "black"),
+        axis.line         = element_line(linewidth = 0,   color = "white"),
+        axis.ticks        = element_line(linewidth = 0.2, color = "black"),
+        axis.ticks.length = unit(0.2, "cm"),
+        panel.grid.major  = element_line(linewidth = 0.25, colour = "gray97")) +
+  geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
+#
+
+figpsa8 <- ggplot(covidData_PSA) +
+  geom_point(aes(x=iDaly, y=iCost), shape=21, size=2.5, 
              stroke=0.5, fill="#FFFFFFEE", color="#87cefa") +
   geom_hline(yintercept=0, linetype="solid", color = "black", linewidth=0.5) +
   geom_vline(xintercept=0, linetype="solid", color = "black", linewidth=0.5) +
@@ -431,10 +561,17 @@ figpsa4 <- ggplot(covidData_PSA) +
   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
 
 
-plot_grid(figpsa1, figpsa2, figpsa3, figpsa4, labels = c("(a)","(b)","(c)","(d)"),label_x=0.12,label_y = 0.98, ncol = 2)
 
-ggsave(height=10, width=12, dpi=600, file="plots/figure_psa.pdf")
 
+
+plot_grid(figpsa5, figpsa7, figpsa6, figpsa8, labels = c("(e)","(f)","(g)","(h)"),label_x=0.12,label_y = 0.98, ncol = 2)
+
+ggsave(height=10, width=12, dpi=600, file="plots/figure_psa2.pdf")
+
+
+
+plot_grid(figpsa1,  figpsa3, figpsa2, figpsa4, figpsa5, figpsa7, figpsa6, figpsa8, labels = c("(a)","(b)","(c)","(d)","(e)","(f)","(g)","(h)"),label_x=0.12,label_y = 0.98, ncol = 2)
+ggsave(height=20, width=12, dpi=600, file="plots/figure_psa_combined.pdf")
 
 ### Cost-effectiveness acceptability curve ########################################################################################
 
@@ -456,24 +593,52 @@ for(i in 1:length(wtpLevels)){
   ceacData$noBoost[i] <- mean(covidData_PSA$noBoost)  # Compute the probabilities for "noBoost"
 }
 
-### CEAC Plots for Older pop ########################################################################################
-#figceac1/3
+### CEAC Plots data ########################################################################################
+#remember go back to select epi scenarios first
+### main paper
 ceac1 <- ceacData
-ceac1$strategy <- ("High-risk boosting, older population, immune escape starts 2.5yr, boosting at 2.0yr")
+ceac1$strategy <- ("High-risk boosting, immune escape starts 1.5yr, boosting at 2.0yr")
+ceac1$population <- ("older")
 
-ceac3 <- ceacData #remember go back to select epi scenarios first
-ceac3$strategy <- ("Paediatric boosting, older population, immune escape starts 2.5yr, boosting at 2.0yr")
+ceac2 <- ceacData 
+ceac2$strategy <- ("Paediatric boosting, immune escape starts 1.5yr, boosting at 2.0yr")
+ceac2$population <- ("older")
 
-ceacOld <- rbind(ceac1, ceac3)
-# write_csv(ceacOld, "data/ceac_old.csv")
+ceac3 <- ceacData
+ceac3$strategy <- ("High-risk boosting, immune escape starts 1.5yr, boosting at 2.0yr")
+ceac3$population <- ("younger")
 
-### CEAC Plots for Younger pop ########################################################################################
-#figceac2/4
-ceac2 <- ceacData
-ceac2$strategy <- ("High-risk boosting, younger population, immune escape starts 1.5yr, boosting at 2.0yr")
+ceac4 <- ceacData
+ceac4$strategy <- ("Paediatric boosting, immune escape starts 1.5yr, boosting at 2.0yr")
+ceac4$population <- ("younger")
+##
+ceac5 <- ceacData
+ceac5$strategy <- ("High-risk boosting, immune escape starts 2.5yr, boosting at 2.0yr")
+ceac5$population <- ("older")
 
-ceac4 <- ceacData #remember go back to select epi scenarios first
-ceac4$strategy <- ("Paediatric boosting, younger population, immune escape starts 1.5yr, boosting at 2.0yr")
+ceac6 <- ceacData 
+ceac6$strategy <- ("Paediatric boosting, immune escape starts 2.5yr, boosting at 2.0yr")
+ceac6$population <- ("older")
 
-ceacYoung <- rbind(ceac2, ceac4)
-# write_csv(ceacYoung, "data/ceac_young.csv")
+ceac7 <- ceacData
+ceac7$strategy <- ("High-risk boosting, immune escape starts 2.5yr, boosting at 2.0yr")
+ceac7$population <- ("younger")
+
+ceac8 <- ceacData
+ceac8$strategy <- ("Paediatric boosting, immune escape starts 2.5yr, boosting at 2.0yr")
+ceac8$population <- ("younger")
+
+ceac <- rbind(ceac1, ceac2, ceac3, ceac4, ceac5, ceac6, ceac7, ceac8)
+
+# write_csv(ceac, "data/ceac_main.csv")
+
+### low/med coverage
+ceacMed <- ceacData
+ceacMed$strategy <- ("High-risk boost (medium coverage)")
+
+ceacLow <- ceacData
+ceacLow$strategy <- ("High-risk boost (low coverage)")
+
+ceac <- rbind(ceacMed, ceacLow)
+
+# write_csv(ceac, "data/ceac_coverage.csv")
