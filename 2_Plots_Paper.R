@@ -175,7 +175,7 @@ figceac2 <- ggplot(df,aes(WTP, Boost, group=strategy)) +
   geom_vline(aes(xintercept=cetWoodsB_CEAC[1]), linetype="dashed", color="black") +
   geom_vline(aes(xintercept=cetWoodsB_CEAC[2]), linetype="dashed", color="black") +
   cetLowerB_CEAC + cetHigherB_CEAC +
-  theme(legend.position = c(0.65, 0.6),
+  theme(legend.position = c(0.64, 0.59),
         legend.key.size = unit(0.5, 'cm'),
         legend.text = element_text(size=12, family = "DejaVu Sans"),
         legend.title = element_text(size=12),
