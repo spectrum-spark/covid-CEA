@@ -48,7 +48,7 @@ offset_trans <- function(offset=0) {
 
 
 
-##### Fig E3  ##################
+##### Fig E5  ##################
 
 # Get the base case icer value
 baseCase <- covidData_Base %>%  
@@ -102,13 +102,13 @@ ggplot(df, aes(x=parameter,y=value, fill=type, colour=type)) +
             size = 4, family = "univers") +
   ggtitle("Scenario: older population, 80% initial vaccination coverage, low TP \n immune escape starts 1.5 yr, boosting at 2.0 yr")
 
-ggsave(height=6, width=9, dpi=600, file="plots/figure_E3.pdf")
+ggsave(height=6, width=9, dpi=600, file="plots/figure_E5.pdf")
 
 
 
 
 
-##### Fig E4  ##################
+##### Fig E6  ##################
 
 # Get the base case icer value
 baseCase <- covidData_Base %>%  
@@ -163,10 +163,10 @@ ggplot(df, aes(x=parameter,y=value, fill=type, colour=type)) +
             size = 4, family = "univers") +
   ggtitle("Scenario: younger population, 80% initial vaccination coverage, high TP \n immune escape starts 2.5 yr, boosting at 2.0 yr")
             
-ggsave(height=6, width=9, dpi=600, file="plots/figure_E4.pdf")
+ggsave(height=6, width=9, dpi=600, file="plots/figure_E6.pdf")
 
 
-##### Fig E5  ##################
+##### Fig E9  ##################
 
 # Get the base case icer value
 baseCase <- covidData_Base %>%  
@@ -288,7 +288,7 @@ figure_6month_2 <- ggplot(df, aes(x=parameter,y=value, fill=type, colour=type)) 
 
 
 plot_grid(figure_6month_1, figure_6month_2, rows = 2, labels = c("(a)","(b)"),label_x=0.12,label_y = 0.98)
-ggsave(height=8, width=10, dpi=600, file="plots/figure_E5.pdf")
+ggsave(height=8, width=10, dpi=600, file="plots/figure_E9.pdf")
 
 
 
