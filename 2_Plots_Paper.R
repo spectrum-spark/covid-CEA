@@ -191,18 +191,18 @@ plot_grid(figure3a, figure3b,figceac1, figceac2, labels = c("(a)","(b)", "(c)","
 ggsave(height=10, width=12, dpi=600, file="plots/figure_3.pdf")
 
 
-############ Figure 5
+############ Figure E8 in the appendix
 
 
 
-# Fig 5a
+# Fig E8a
 df <- covidData_Base %>% filter(popType=="Older" & immuneEscape=="1.50 yr" & tpLevel=="high TP" & 
                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"))
 df[df == "6-monthly boost at 1.75 yr"] <- "Half-yearly boosting" # Update 6-monthly name
 
 df$scenarioBoostStart<- factor(df$scenarioBoostStart,levels = c("High-risk boost at 1.75 yr", "High-risk boost at 2.00 yr","High-risk boost at 2.25 yr","High-risk boost at 2.50 yr","Half-yearly boosting"))
 # ggtitle <- "Scenario: older population, 80% initial vaccination coverage \n high TP, immune escape 1.5 yr"
-figure5a <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
+figureE8a <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
   geom_point(size=2.5) + labs(shape = "", color = "") +
   scale_shape_manual(values=c("circle open", "square", "triangle", "diamond","asterisk"), name = "older population (immune escape 1.5 yr)") +
   scale_color_manual(values=c("#fa8072", "#fa8072", "#ff0000", "#b22222","#9370db"), name = "older population (immune escape 1.5 yr)") +
@@ -211,13 +211,13 @@ figure5a <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=sce
 
 
 
-# Fig 5b
+# Fig E8b
 df <- covidData_Base %>% filter(popType=="Younger" & immuneEscape=="1.50 yr" & tpLevel=="high TP" & 
                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"))
 df[df == "6-monthly boost at 1.75 yr"] <- "Half-yearly boosting" # Update 6-monthly name
 df$scenarioBoostStart<- factor(df$scenarioBoostStart,levels = c("High-risk boost at 1.75 yr", "High-risk boost at 2.00 yr","High-risk boost at 2.25 yr","High-risk boost at 2.50 yr","Half-yearly boosting"))
 #ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, immune escape 1.5 yr"
-figure5b <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
+figureE8b <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
   geom_point(size=2.5) + labs(shape = "", color = "") +
   scale_shape_manual(values=c( "circle open", "square", "triangle", "diamond","asterisk"), name = "younger population (immune escape 1.5 yr)") +
   scale_color_manual(values=c( "#87cefa", "#87cefa", "#1e90ff", "#000080","#9370db"), name = "younger population (immune escape 1.5 yr)") +
@@ -226,13 +226,13 @@ figure5b <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=sce
 
 
 
-# Fig 5c
+# Fig E8c
 df <- covidData_Base %>% filter(popType=="Older" & immuneEscape=="2.50 yr" & tpLevel=="high TP" & 
                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"))
 df[df == "6-monthly boost at 1.75 yr"] <- "Half-yearly boosting" # Update 6-monthly name
 df$scenarioBoostStart<- factor(df$scenarioBoostStart,levels = c("High-risk boost at 1.75 yr", "High-risk boost at 2.00 yr","High-risk boost at 2.25 yr","High-risk boost at 2.50 yr","Half-yearly boosting"))
 #ggtitle <- "Scenario: older population, 80% initial vaccination coverage \n high TP, immune escape 2.5 yr"
-figure5c <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
+figureE8c <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
   geom_point(size=2.5) + labs(shape = "", color = "") +
   scale_shape_manual(values=c("circle open", "square", "triangle", "diamond","asterisk") , name = "older population (immune escape 2.5 yr)") +
   scale_color_manual(values=c("#fa8072", "#fa8072", "#ff0000", "#b22222","#9370db"), name = "older population (immune escape 2.5 yr)") +
@@ -241,13 +241,13 @@ figure5c <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=sce
 
 
 
-# Fig 5d
+# Fig E8d
 df <- covidData_Base %>% filter(popType=="Younger" & immuneEscape=="2.50 yr" & tpLevel=="high TP" & 
                                   (scenario=="High-risk boost" | scenario=="6-monthly boost"))
 #ggtitle <- "Scenario: younger population, 80% initial vaccination coverage \n high TP, immune escape 2.5 yr"
 df[df == "6-monthly boost at 1.75 yr"] <- "Half-yearly boosting" # Update 6-monthly name
 df$scenarioBoostStart<- factor(df$scenarioBoostStart,levels = c("High-risk boost at 1.75 yr", "High-risk boost at 2.00 yr","High-risk boost at 2.25 yr","High-risk boost at 2.50 yr","Half-yearly boosting"))
-figure5d <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
+figureE8d <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=scenarioBoostStart)) +
   geom_point(size=2.5) + labs(shape = "", color = "") +
   scale_shape_manual(values=c("circle open", "square", "triangle", "diamond", "asterisk") , name = "younger population (immune escape 2.5 yr)") +
   scale_color_manual(values=c("#87cefa", "#87cefa", "#1e90ff", "#000080","#9370db"), name = "younger population (immune escape 2.5 yr)") +
@@ -255,17 +255,17 @@ figure5d <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioBoostStart, color=sce
   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
 
 
-plot_grid(figure5a, figure5b, figure5c, figure5d, labels = c("(a)","(b)","(c)","(d)"),label_x=0.12,label_y = 0.98, ncol = 2)
+plot_grid(figureE8a, figureE8b, figureE8c, figureE8d, labels = c("(a)","(b)","(c)","(d)"),label_x=0.12,label_y = 0.98, ncol = 2)
 
-ggsave(height=10, width=12, dpi=600, file="plots/figure_5.pdf")
-
-
+ggsave(height=10, width=12, dpi=600, file="plots/figure_E8.pdf")
 
 
 
 
 
-###################### Figure 7 c
+
+
+###################### Figure 6 c
 
 
 df <- covidData_Base %>% filter(popType=="Younger" & immuneEscape=="2.00 yr" & tpLevel=="high TP" & 
@@ -293,7 +293,7 @@ ggplot(df, aes(x=iDaly, y=iCost, shape=scenarioVaxCoverage, color=scenarioVaxCov
   scale_color_manual(values=c("#87cefa", "#1e90ff", "#000080", "#87cefa", "#1e90ff",  "#000080"), name = "younger population") +
   xlab + ylab + xscale + yscale + hline + vline + border + theme + #ggtitle(ggtitle) +
   geom_abline(intercept = 0, slope = cetWoodsB,  linewidth = 0.3, linetype="dashed") + cetLowerB + cetHigherB
-ggsave(height=5, width=6, dpi=600, file="plots/figure_7c.pdf")
+ggsave(height=5, width=6, dpi=600, file="plots/figure_6c.pdf")
 
 
 ############# Figure E9
@@ -387,19 +387,19 @@ theme <- theme + theme(legend.key.size = unit(0.45, 'cm'))
 
 
 
-############ Figure 6 c, d
+############ Figure 5 c, d
 
 
 
 
 
-# Figure 6c: Group A, 80% coverage, immune escape at 2 years, high TP, age scenarios
+# Figure 5c: Group A, 80% coverage, immune escape at 2 years, high TP, age scenarios
 df <- covidData_Base %>% 
   filter(group=="A" & tpLevel=="high TP" & grepl('65+|55+|45+|35+|25+|16+|5+', scenario))
 #df[df == "boost 5+"]   <- "boost 05+"
 df$scenario<- factor(df$scenario,levels = c("boost 65+","boost 55+","boost 45+","boost 35+","boost 25+","boost 16+","boost 5+"))
 #ggtitle <- "Scenario: older population, 80% coverage, immune escape / boosting 2 yr, high TP"
-figure_6c <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
+figure_5c <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
   geom_point(size=2.5) + labs(shape = "", color = "") +
   scale_shape_manual(values=c("circle", "circle plus", "square", "square plus", "triangle", "triangle open", "asterisk"),name ="older population") +
   scale_color_manual(values=c("#b22222","#ff0000", "#ffa500", "#ffd700", "#9acd32", "#000080", "#1e90ff"),name ="older population") +
@@ -414,7 +414,7 @@ df <- covidData_Base %>%
 # df[df == "boost 5+"]   <- "boost 05+"
 df$scenario<- factor(df$scenario,levels = c("boost 65+","boost 55+","boost 45+","boost 35+","boost 25+","boost 16+","boost 5+"))
 #ggtitle <- "Scenario: young population, 80% coverage, immune escape / boosting 2 yr, high TP"
-figure_6d <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
+figure_5d <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
   geom_point(size=2.5) + labs(shape = "", color = "") +
   scale_shape_manual(values=c("circle", "circle plus", "square", "square plus", 
                               "triangle", "triangle open", "asterisk"),name ="younger population") +
@@ -424,13 +424,13 @@ figure_6d <- ggplot(df, aes(x=iDaly, y=iCost, shape=scenario, color=scenario)) +
 
 
 
-plot_grid(figure_6c, figure_6d, labels = c("(c)","(d)"),label_x=0.12,label_y = 0.98)
-ggsave(height=5, width=12, dpi=600, file="plots/figure_6cd.pdf")
+plot_grid(figure_5c, figure_5d, labels = c("(c)","(d)"),label_x=0.12,label_y = 0.98)
+ggsave(height=5, width=12, dpi=600, file="plots/figure_5cd.pdf")
 
 
 ################
 
-#Figure FE7
+#Figure E7
 
 
 df <- covidData_Base %>% 
